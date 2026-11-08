@@ -103,6 +103,7 @@ You need three free accounts. Do them in this order.
 | `ANTHROPIC_API_KEY is not set` | Add it in Vercel, then Redeploy |
 | `Anthropic API error 401` | The key is wrong or was deleted: create a new key and update Vercel |
 | `Anthropic API error 400 … credit balance` | Add credit in the Anthropic console |
+| `... is deprecated for this model` | A request setting is no longer supported by the model; remove it from `api/agent.js` |
 | `Anthropic API error 404 … model` | Set `ANTHROPIC_MODEL` to a model your account can use (see the models page in the Anthropic docs), then Redeploy |
 | An application shows "Blocked" with an error | Open it and click **Re-run agent**; occasional timeouts happen |
 | The page says it could not load the data files | You opened `index.html` straight from your computer. Use the Vercel link instead |

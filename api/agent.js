@@ -89,7 +89,7 @@ function makeCallModel(startedAt) {
             "x-api-key": process.env.ANTHROPIC_API_KEY,
             "anthropic-version": "2023-06-01",
           },
-          body: JSON.stringify({ model: MODEL, max_tokens: 2000, temperature: 0.2, system, messages }),
+          body: JSON.stringify({ model: MODEL, max_tokens: 2000, system, messages }),
         });
         if (resp.ok) data = await resp.json();
         else errText = await resp.text();
