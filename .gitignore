@@ -1,0 +1,11 @@
+# Excel lock files
+~$*
+
+# Dependencies
+node_modules/
+
+# Local secrets (never commit)
+.env*
+
+# Vercel CLI link folder
+.vercel/

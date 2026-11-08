@@ -1,0 +1,10 @@
+{
+  "name": "razorpay-onboarding-recovery-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Problem 3 (onboarding and KYC drop-off recovery) for the Razorpay Campus AI Build-a-thon. No dependencies.",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "node tests/test_agent.js && node tests/test_safety_http.js"
+  }
+}

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Onboarding Recovery Agent | Razorpay Campus AI Build-a-thon (Problem 3)</title>
+<style>
+  :root{
+    --ink:#0f1b2d; --ink2:#43506a; --mute:#7b869c; --line:#e3e8f0; --bg:#f5f7fb; --card:#fff;
+    --navy:#0b2a5b; --blue:#2463eb; --blue-soft:#e8efff;
+    --rule:#2463eb; --ai:#7c3aed; --check:#0f8a5f; --human:#c2410c;
+    --ok:#0f8a5f; --ok-soft:#e3f6ee; --warn:#b45309; --warn-soft:#fff4e0; --bad:#c62828; --bad-soft:#fdeaea;
+    --violet-soft:#f1eafe; --r:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Kannada",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
+  header{background:var(--navy);color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  header h1{font-size:19px;margin:0 0 2px;font-weight:700;letter-spacing:.2px}
+  header p{margin:0;color:#c7d3ea;font-size:13px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:600}
+  .pill.demo{background:#ffffff1f;color:#fff}
+  .pill.live{background:#16a34a;color:#fff}
+  button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;font-weight:600;font-size:13px}
+  button:hover{border-color:#b9c4d8}
+  button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+  button.primary:hover{background:#1d54cc}
+  button.ghost-light{background:transparent;color:#fff;border-color:#ffffff55}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  main{max-width:1320px;margin:0 auto;padding:20px 24px 60px}
+  .notice{background:var(--blue-soft);border:1px solid #cfdcff;color:#1e3a8a;border-radius:var(--r);padding:10px 14px;margin-bottom:16px;font-size:13px}
+  .notice.warn{background:var(--warn-soft);border-color:#f6d9a8;color:#7a4a06}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+  .kpi .v{font-size:24px;font-weight:700;letter-spacing:-.3px}
+  .kpi .l{color:var(--ink2);font-size:12.5px;margin-top:2px}
+  .kpi .s{color:var(--mute);font-size:12px;margin-top:4px}
+  .grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-bottom:16px}
+  @media (max-width:900px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
+  .card h2{font-size:15px;margin:0 0 4px}
+  .card .sub{color:var(--mute);font-size:12.5px;margin:0 0 12px}
+  .bar{display:grid;grid-template-columns:230px 1fr 120px;align-items:center;gap:10px;margin:7px 0;font-size:13px}
+  .bar .track{background:#eef2f8;border-radius:6px;height:14px;overflow:hidden}
+  .bar .fill{background:var(--blue);height:100%;border-radius:6px}
+  .bar .num{color:var(--ink2);font-variant-numeric:tabular-nums;text-align:right}
+  .flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 12px}
+  .flow span{font-size:12px;padding:4px 8px;border-radius:6px;font-weight:600}
+  .flow i{color:var(--mute);font-style:normal}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:.2px}
+  .t-Rule{background:#e8efff;color:var(--rule)} .t-AI{background:var(--violet-soft);color:var(--ai)}
+  .t-Check{background:var(--ok-soft);color:var(--check)} .t-Human{background:#fdeee4;color:var(--human)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 10px}
+  .toolbar select,.toolbar input{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px}
+  .toolbar .spacer{flex:1}
+  .progress{height:6px;background:#e7ecf4;border-radius:4px;overflow:hidden;margin:6px 0 10px;display:none}
+  .progress div{height:100%;background:var(--ai);width:0%}
+  table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:13px}
+  th{background:#f0f3f9;text-align:left;font-weight:600;color:var(--ink2);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
+  td{padding:8px 10px;border-bottom:1px solid #eef1f6;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tbody tr{cursor:pointer} tbody tr:hover td{background:#f8faff}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .b-ok{background:var(--ok-soft);color:var(--ok)} .b-warn{background:var(--warn-soft);color:var(--warn)}
+  .b-bad{background:var(--bad-soft);color:var(--bad)} .b-blue{background:var(--blue-soft);color:var(--blue)}
+  .b-grey{background:#eef1f6;color:var(--ink2)} .b-violet{background:var(--violet-soft);color:var(--ai)}
+  .panel{display:none;margin:0 0 14px} .panel.open{display:block}
+  .form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  .form label{font-size:12px;color:var(--ink2);display:flex;flex-direction:column;gap:4px}
+  .form input,.form select,.form textarea{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:8px;font-size:13px}
+  /* drawer */
+  .scrim{position:fixed;inset:0;background:#0f1b2d55;display:none;z-index:20}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(760px,100%);background:#fff;z-index:21;transform:translateX(100%);transition:transform .2s ease;overflow-y:auto;box-shadow:-10px 0 30px #0f1b2d22}
+  .drawer.open{transform:none} .scrim.open{display:block}
+  .dh{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:2}
+  .dh h3{margin:0;font-size:17px}
+  .db{padding:16px 20px 40px}
+  .sec{margin:0 0 18px}
+  .sec h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);margin:0 0 8px}
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .facts div{background:#f6f8fc;border-radius:8px;padding:7px 10px}
+  .facts b{display:block;font-size:11px;color:var(--mute);font-weight:600}
+  .note{background:#fffbea;border:1px dashed #e9cf73;border-radius:8px;padding:9px 12px;font-size:13px}
+  .trace{border-left:2px solid var(--line);margin-left:6px;padding-left:14px}
+  .step{position:relative;margin:0 0 10px}
+  .step:before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;background:#cbd5e1}
+  .step.Rule:before{background:var(--rule)} .step.AI:before{background:var(--ai)} .step.Check:before{background:var(--check)} .step.Human:before{background:var(--human)}
+  .step .h{font-weight:600} .step .d{color:var(--ink2);font-size:12.5px;margin-top:2px;word-break:break-word}
+  .msg{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 10px;white-space:pre-wrap;word-break:break-word}
+  .msg .lab{font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .msg.wa{background:#e9fbe5;border-color:#c9efc0}
+  .msg.bt{background:#f6f8fc;font-size:13px;color:var(--ink2)}
+  .checks{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .chk{font-size:12.5px;padding:6px 9px;border-radius:7px}
+  .chk.p{background:var(--ok-soft)} .chk.f{background:var(--bad-soft)}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  footer{color:var(--mute);font-size:12px;text-align:center;padding:20px}
+  .muted{color:var(--mute)}
+  .small{font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Onboarding Recovery Agent</h1>
+    <p>Finds why merchants stall in onboarding, decides what is safe to do, and drafts the right nudge in their language. Problem 3, Razorpay Campus AI Build-a-thon.</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span id="modePill" class="pill demo">Demo mode: saved results</span>
+    <button id="unlockBtn" class="ghost-light">Unlock live mode</button>
+  </div>
+</header>
+
+<main>
+  <div id="notice" class="notice">Loading…</div>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>Why merchants are stuck (fixable cases)</h2>
+      <p class="sub">Grouped by root cause. Bars show number of applications; right column shows expected TPV at stake (Rs lakh / month).</p>
+      <div id="causes"></div>
+    </div>
+    <div class="card">
+      <h2>How the agent works</h2>
+      <p class="sub">Rules make every decision that can harm a merchant. AI only reads messy notes and writes messages. Nothing is sent without a human.</p>
+      <div class="flow">
+        <span class="t-Rule">Rule: diagnose</span><i>→</i>
+        <span class="t-AI">AI: read unclear note</span><i>→</i>
+        <span class="t-Rule">Rule: accept or escalate</span><i>→</i>
+        <span class="t-Rule">Rule: route, priority, channel</span><i>→</i>
+        <span class="t-AI">AI: write message</span><i>→</i>
+        <span class="t-Check">Check: up to 11 safety checks</span><i>→</i>
+        <span class="t-AI">AI: rewrite once if failed</span><i>→</i>
+        <span class="t-Human">Human: approve</span>
+      </div>
+      <div id="insight" class="small"></div>
+    </div>
+  </section>
+
+  <section class="panel card" id="assumpPanel">
+    <h2>Assumptions (what-if)</h2>
+    <p class="sub">Change a number and every rule-based column and total updates instantly. Messages already written are not rewritten; re-run the agent to refresh them.</p>
+    <div class="form" id="assumpForm"></div>
+    <div style="margin-top:10px"><button id="assumpReset">Reset to agreed values</button></div>
+  </section>
+
+  <section class="panel card" id="stressPanel">
+    <h2>Stress test: try your own application</h2>
+    <p class="sub">Live mode only. Use it to test tricky cases (for example a restricted business phrased in new words). Results open in the side panel and are not added to the main table.</p>
+    <div class="form">
+      <label>Reviewer note (leave blank for "merchant just stopped")<textarea id="cNote" rows="2">We cannot onboard this line of business under our policy</textarea></label>
+      <label>Rejection code (optional)<input id="cCode" placeholder="e.g. R02"></label>
+      <label>Language<select id="cLang"><option>English</option><option>Hinglish</option><option>Hindi</option><option>Tamil</option><option>Kannada</option><option>Marathi</option></select></label>
+      <label>WhatsApp opted in<select id="cWa"><option>Yes</option><option>No</option></select></label>
+      <label>Step reached<select id="cStep"><option>KYC docs</option><option>Bank verification</option><option>Website/App review</option><option>Business details</option></select></label>
+      <label>Business type<select id="cType"><option>Proprietorship</option><option>Partnership</option><option>Private Limited</option><option>LLP</option><option>Trust / NGO</option></select></label>
+      <label>Days inactive<input id="cDays" type="number" value="5"></label>
+      <label>Attempts<input id="cAtt" type="number" value="1"></label>
+      <label>Support contacts<input id="cCont" type="number" value="0"></label>
+      <label>Expected TPV (Rs lakh / month)<input id="cTpv" type="number" value="10" step="0.1"></label>
+    </div>
+    <div style="margin-top:10px"><button class="primary" id="cRun">Run agent on this test case</button> <span id="cMsg" class="muted small"></span></div>
+  </section>
+
+  <div class="toolbar">
+    <select id="fRoute"><option value="all">All routes</option><option>Nudge to fix</option><option>Close politely</option><option>Route to Compliance</option></select>
+    <select id="fStatus"><option value="all">All statuses</option></select>
+    <select id="fLang"><option value="all">All languages</option></select>
+    <input id="fQ" placeholder="Search ID or code…" size="16">
+    <span class="spacer"></span>
+    <button id="toggleAssump">Assumptions</button>
+    <button id="toggleStress">Stress test</button>
+    <button id="exportCsv">Download table (Excel CSV)</button>
+    <button id="exportJson" title="Save this run so the public demo shows it">Export run (saved_run.json)</button>
+    <button id="runAll" class="primary">Run agent on all</button>
+  </div>
+  <div class="progress" id="prog"><div></div></div>
+  <div id="progText" class="muted small"></div>
+
+  <table>
+    <thead><tr>
+      <th data-sort="rank" class="num">Rank</th><th data-sort="id">Application</th><th data-sort="lang">Language</th>
+      <th data-sort="channel">Channel</th><th data-sort="tpv" class="num">TPV (L/mo)</th><th data-sort="days" class="num">Days quiet</th>
+      <th data-sort="code">Diagnosis</th><th data-sort="route">Route</th><th data-sort="rec">Recoverable</th><th data-sort="status">Agent status</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+</main>
+
+<footer>Prototype by Vipin Syam for the Razorpay Campus AI Build-a-thon. All data is synthetic (Data Pack, snapshot 30 Sep 2026). Not a Razorpay product. Messages are drafts: nothing is sent.</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Application details"></aside>
+
+<script src="lib/rules.js"></script>
+<script>
+"use strict";
+const S = { apps: [], catalog: {}, saved: null, results: {}, approvals: {}, A: Object.assign({}, Rules.DEFAULT_ASSUMPTIONS),
+  passcode: null, live: false, sort: { key: "rank", dir: 1 }, running: false, open: null, custom: {} };
+const $ = (id) => document.getElementById(id);
+const esc = (v) => String(v === null || v === undefined ? "" : v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (n, d = 1) => (n === null || n === undefined || isNaN(n)) ? "-" : Number(n).toLocaleString("en-IN", { minimumFractionDigits: d, maximumFractionDigits: d });
+const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+
+async function init() {
+  try {
+    const [apps, cat, saved] = await Promise.all([
+      fetch("data/applications.json").then((r) => r.json()),
+      fetch("data/catalog.json").then((r) => r.json()),
+      fetch("saved_run.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    ]);
+    S.apps = apps; S.catalog = cat; S.saved = saved;
+    S.results = Object.assign({}, (saved && saved.results) || {}, store.get("p3_live_results") || {});
+    S.approvals = store.get("p3_approvals") || {};
+  } catch (e) {
+    $("notice").className = "notice warn";
+    $("notice").textContent = "Could not load the data files. If you opened index.html directly from disk, open it through Vercel (or any web server) instead.";
+    return;
+  }
+  buildFilters(); buildAssumptions(); render();
+}
+
+// ------------------------------------------------------------------ data
+function overrides() {
+  const o = {};
+  for (const [id, r] of Object.entries(S.results))
+    if (r && r.diagnosis_decision && r.diagnosis_decision.decision === "accepted") o[id] = r.diagnosis_decision.code;
+  return o;
+}
+function rows() {
+  const rr = Rules.runAll(S.apps, S.catalog, S.A, overrides());
+  const byId = Object.fromEntries(S.apps.map((a) => [a.application_id, a]));
+  return rr.map((r) => ({ r, app: byId[r.application_id], res: S.results[r.application_id] || null }));
+}
+function statusOf(x) {
+  const ap = S.approvals[x.r.application_id];
+  if (ap) return ap;
+  if (x.res && x.res.status) return x.res.status;
+  return x.r.message_type === "pending" ? "Not run: needs AI reading" : "Not run";
+}
+function statusBadge(s) {
+  const cls = s.startsWith("Approved") ? "b-ok" : s.startsWith("Ready") ? "b-blue" : s.startsWith("Blocked") ? "b-bad"
+    : s.startsWith("Escalated") || s.startsWith("Sent back") ? "b-warn" : s.startsWith("Not run: needs") ? "b-violet" : "b-grey";
+  return `<span class="badge ${cls}">${esc(s)}</span>`;
+}
+function routeBadge(r) {
+  return r === "Close politely" ? '<span class="badge b-bad">Close politely</span>'
+    : r === "Route to Compliance" ? '<span class="badge b-warn">Compliance</span>' : '<span class="badge b-grey">Nudge to fix</span>';
+}
+
+// ------------------------------------------------------------------ render
+function render() {
+  const all = rows();
+  renderNotice(all); renderKpis(all); renderCauses(all); renderTable(all);
+  if (S.open) openDrawer(S.open, true);
+}
+function renderNotice(all) {
+  const done = all.filter((x) => x.res).length;
+  const n = $("notice");
+  if (S.saved && S.saved.generated_at && done) {
+    n.className = "notice";
+    n.innerHTML = `Showing the agent's results for <b>${done} of ${all.length}</b> applications (saved run of ${esc(new Date(S.saved.generated_at).toLocaleString("en-IN"))}, model ${esc(S.saved.model || "")}). ` +
+      (S.live ? "Live mode is on: you can re-run any application." : "Demo mode: these are saved results; no AI is called.");
+  } else if (done) {
+    n.className = "notice";
+    n.innerHTML = `Agent results available for <b>${done} of ${all.length}</b> applications from live runs in this browser. Use <b>Export run</b> to save them for the public demo.`;
+  } else {
+    n.className = "notice warn";
+    n.innerHTML = "The rule-based decisions below are complete for all applications. The AI steps (reading unclear notes and writing messages) have not been run yet: " +
+      (S.live ? "press <b>Run agent on all</b>." : "unlock live mode, then press <b>Run agent on all</b>.");
+  }
+}
+function renderKpis(all) {
+  const nud = all.filter((x) => x.r.route === "Nudge to fix");
+  const sum = (arr) => arr.reduce((s, x) => s + Number(x.app.expected_monthly_tpv_inr_lakh || 0), 0);
+  const rec = nud.filter((x) => x.r.recoverable === "Recoverable");
+  const low = nud.filter((x) => x.r.recoverable === "Low probability");
+  const hum = nud.filter((x) => x.r.human_call === "Yes");
+  const cl = all.filter((x) => x.r.route === "Close politely"), co = all.filter((x) => x.r.route === "Route to Compliance");
+  const ready = all.filter((x) => statusOf(x).startsWith("Ready") || statusOf(x).startsWith("Approved")).length;
+  const blocked = all.filter((x) => statusOf(x).startsWith("Blocked") || statusOf(x).startsWith("Escalated")).length;
+  const k = [
+    [all.length, "Applications needing action", `of ${S.apps.length} in the Data Pack (${S.apps.length - all.length} already live)`],
+    [rec.length, "Recoverable", `Rs ${fmt(sum(rec))}L / month expected TPV`],
+    [low.length, "Low probability", `Rs ${fmt(sum(low))}L: one final reminder, then stop`],
+    [hum.length, "Human calls", `Rs ${fmt(sum(hum))}L: high value and frustrated`],
+    [cl.length + co.length, "Not nudged", `${cl.length} closed politely, ${co.length} to Compliance`],
+    [ready, "Messages ready for approval", `${blocked} blocked or escalated to a human`],
+  ];
+  $("kpis").innerHTML = k.map(([v, l, s]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div><div class="s">${esc(s)}</div></div>`).join("");
+}
+function renderCauses(all) {
+  const nud = all.filter((x) => x.r.route === "Nudge to fix");
+  const g = {};
+  for (const x of nud) { const t = x.r.theme; g[t] = g[t] || { n: 0, tpv: 0 }; g[t].n++; g[t].tpv += Number(x.app.expected_monthly_tpv_inr_lakh || 0); }
+  const list = Object.entries(g).sort((a, b) => b[1].n - a[1].n);
+  const max = Math.max(1, ...list.map(([, v]) => v.n));
+  $("causes").innerHTML = list.map(([t, v]) =>
+    `<div class="bar"><div>${esc(t)}</div><div class="track"><div class="fill" style="width:${(v.n / max) * 100}%;${t.startsWith("Pending") ? "background:var(--ai)" : ""}"></div></div><div class="num">${v.n} · Rs ${fmt(v.tpv)}L</div></div>`).join("");
+  const top = list.filter(([t]) => !t.startsWith("Abandoned") && !t.startsWith("Pending"))[0];
+  const ab = g["Abandoned (no rejection)"];
+  $("insight").innerHTML = `<p style="margin:0 0 6px"><b>Our recommendation to the product team:</b> ` +
+    (top ? `the biggest fixable rejection cause is <b>${esc(top[0].toLowerCase())}</b> (${top[1].n} applications, Rs ${fmt(top[1].tpv)}L / month). ` : "") +
+    `Check that the name on PAN, GST and the bank account match the application <i>while the merchant is typing</i>, before they submit, so the rejection never happens.</p>` +
+    (ab ? `<p style="margin:0" class="muted">${ab.n} more merchants were never rejected; they just stopped (Rs ${fmt(ab.tpv)}L). A reminder naming the exact step, with a resume link, is the fix for them.</p>` : "");
+}
+function sortVal(x, key) {
+  return { rank: x.r.priority_rank || 9999, id: x.r.application_id, lang: x.app.preferred_language, channel: x.r.channel,
+    tpv: -Number(x.app.expected_monthly_tpv_inr_lakh), days: x.app.days_since_last_activity, code: x.r.diagnosed_code,
+    route: x.r.route, rec: x.r.recoverable, status: statusOf(x) }[key];
+}
+function renderTable(all) {
+  const fr = $("fRoute").value, fs = $("fStatus").value, fl = $("fLang").value, q = $("fQ").value.trim().toLowerCase();
+  let list = all.filter((x) => (fr === "all" || x.r.route === fr) && (fl === "all" || x.app.preferred_language === fl) &&
+    (fs === "all" || statusOf(x).startsWith(fs)) &&
+    (!q || x.r.application_id.toLowerCase().includes(q) || String(x.r.diagnosed_code).toLowerCase().includes(q)));
+  const { key, dir } = S.sort;
+  list.sort((a, b) => { const va = sortVal(a, key), vb = sortVal(b, key); return (va > vb ? 1 : va < vb ? -1 : 0) * dir; });
+  $("rows").innerHTML = list.map((x) => `<tr data-id="${esc(x.r.application_id)}">
+    <td class="num">${x.r.priority_rank ? "#" + x.r.priority_rank : "-"}</td>
+    <td><b>${esc(x.r.application_id)}</b><div class="muted small">${esc(x.app.business_type)} · ${esc(x.app.step_reached)}</div></td>
+    <td>${esc(x.app.preferred_language)}</td><td>${esc(x.r.channel)}${x.r.human_call === "Yes" ? '<div><span class="badge b-warn">Human call</span></div>' : ""}</td>
+    <td class="num">${fmt(x.app.expected_monthly_tpv_inr_lakh)}</td><td class="num">${esc(x.app.days_since_last_activity)}</td>
+    <td><b>${esc(x.r.diagnosed_code)}</b><div class="muted small">${esc(x.r.theme)}</div></td>
+    <td>${routeBadge(x.r.route)}</td><td>${esc(x.r.recoverable)}</td><td>${statusBadge(statusOf(x))}</td></tr>`).join("") ||
+    `<tr><td colspan="10" class="muted">No applications match these filters.</td></tr>`;
+}
+
+// ------------------------------------------------------------------ drawer
+function rulesOnlyTrace(r, app) {
+  const t = [{ step: "Filter", actor: "Rule", result: `Status '${app.application_status}': needs action` },
+    { step: "Diagnose", actor: "Rule", result: `${r.diagnosis_source} -> ${r.diagnosed_code}`, detail: r.keyword_safety_net !== "n/a" ? "Keyword safety net: " + r.keyword_safety_net : r.plain_meaning }];
+  if (r.message_type === "pending") t.push({ step: "Read reviewer note", actor: "AI", result: "Not run yet" });
+  t.push({ step: "Route", actor: "Rule", result: r.route });
+  if (r.route === "Nudge to fix") t.push({ step: "Recoverable and priority", actor: "Rule", result: `${r.recoverable}; score ${r.priority_score}${r.priority_rank ? ", rank #" + r.priority_rank : ""}` });
+  t.push({ step: "Channel and handling", actor: "Rule", result: `${r.channel}; ${r.next_action}` });
+  t.push({ step: "Write messages", actor: "AI", result: "Not run yet" });
+  return t;
+}
+function openDrawer(id, keep) {
+  S.open = id;
+  const isCustom = id.startsWith("TEST-");
+  let x;
+  if (isCustom) { const c = S.custom[id]; x = { r: c.res.rules || {}, app: c.app, res: c.res }; }
+  else x = rows().find((y) => y.r.application_id === id);
+  if (!x) return;
+  const { r, app, res } = x;
+  const msg = (res && res.message) || null;
+  const trace = res && res.trace ? res.trace : rulesOnlyTrace(r, app);
+  const st = isCustom ? (res.status || "") : statusOf(x);
+  const parts = [];
+  if (msg) {
+    const box = (k, lab, cls) => msg[k] ? `<div class="msg ${cls || ""}"><div class="lab">${lab}</div>${esc(msg[k])}</div>` : "";
+    parts.push(box("whatsapp", "WhatsApp (day 0)", "wa"), box("sms", "SMS (day 0)"), msg.email_subject ? `<div class="msg"><div class="lab">Email (day 0)</div><b>${esc(msg.email_subject)}</b>\n\n${esc(msg.email_body || "")}</div>` : "",
+      box("reminder_day3", "Day 3 reminder"), box("final_day7", "Day 7 final reminder"), box("call_script", "Call script for the onboarding executive"),
+      box("back_translation_en", "English back-translation (for reviewers)", "bt"));
+  }
+  const checks = res && res.safety ? res.safety.checks : null;
+  const plan = r.follow_up_plan || Rules.followUpPlan(r.message_type);
+  $("drawer").innerHTML = `
+  <div class="dh"><div><h3>${esc(app.application_id)} <span class="muted" style="font-weight:500;font-size:13px">· ${esc(app.business_type)} · ${esc(app.city || "")}</span></h3>
+    <div style="margin-top:4px">${routeBadge(r.route)} ${statusBadge(st)}</div></div>
+    <button id="closeDrawer">Close</button></div>
+  <div class="db">
+    <div class="sec"><h4>Facts from the Data Pack</h4><div class="facts">
+      <div><b>Language</b>${esc(app.preferred_language)}</div><div><b>WhatsApp opted in</b>${esc(app.whatsapp_opted_in)}</div><div><b>Stuck at</b>${esc(app.step_reached)}</div>
+      <div><b>Days quiet</b>${esc(app.days_since_last_activity)}</div><div><b>Attempts / support contacts</b>${esc(app.attempts)} / ${esc(app.support_contacts)}</div><div><b>Expected TPV</b>Rs ${fmt(app.expected_monthly_tpv_inr_lakh)}L / month</div>
+    </div></div>
+    <div class="sec"><h4>Reviewer's note</h4><div class="note">${app.rejection_code ? "<b>" + esc(app.rejection_code) + "</b> · " : "<b>No code</b> · "}${esc(app.rejection_message || "No message: the merchant just stopped.")}</div></div>
+    <div class="sec"><h4>Decision</h4><div class="facts">
+      <div><b>Diagnosis</b>${esc(r.diagnosed_code)}: ${esc(r.plain_meaning)}</div><div><b>Fixable / recoverable</b>${esc(r.fixable)} / ${esc(r.recoverable)}</div><div><b>Priority</b>${r.priority_rank ? "#" + r.priority_rank + " (score " + esc(r.priority_score) + ")" : "-"}</div>
+      <div style="grid-column:span 3"><b>Standard fix (catalog)</b>${esc(r.standard_fix)}</div>
+    </div></div>
+    <div class="sec"><h4>Agent trace</h4><div class="trace">${trace.map((t) => `<div class="step ${esc(t.actor)}"><div class="h"><span class="tag t-${esc(t.actor)}">${esc(t.actor)}</span> ${esc(t.step)}: ${esc(t.result)}</div>${t.detail ? `<div class="d">${esc(t.detail)}</div>` : ""}</div>`).join("")}</div></div>
+    <div class="sec"><h4>Drafted messages ${res && res.drafts === 2 ? '<span class="badge b-warn">rewritten once after a failed check</span>' : ""}</h4>${parts.join("") || '<div class="muted">No message yet. ' + (r.message_type === "pending" || !res ? "Run the agent (live mode) to draft one." : "This case was handed to a human before any drafting.") + "</div>"}</div>
+    ${checks ? `<div class="sec"><h4>Safety checks (${checks.filter((c) => c.pass).length} of ${checks.length} passed)</h4><div class="checks">${checks.map((c) => `<div class="chk ${c.pass ? "p" : "f"}">${c.pass ? "✓" : "✗"} ${esc(c.label)}${c.detail && !c.pass ? `<div class="muted small">${esc(c.detail)}</div>` : ""}</div>`).join("")}</div></div>` : ""}
+    <div class="sec"><h4>Follow-up plan (rules)</h4><ol style="margin:0 0 6px 18px;padding:0">${plan.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol><div class="muted small">${esc(plan.stop_rules)}</div></div>
+    <div class="sec"><h4>Human decision</h4><div class="actions">
+      ${isCustom ? "" : `<button class="primary" id="approveBtn" ${msg && res.safety && res.safety.passed ? "" : "disabled"}>Approve: queue to send</button>
+      <button id="rejectBtn" ${res ? "" : "disabled"}>Send back to a human</button>
+      ${S.approvals[id] ? '<button id="undoBtn">Undo decision</button>' : ""}
+      <button id="runOneBtn" ${S.live ? "" : "disabled"} title="${S.live ? "" : "Unlock live mode first"}">${res ? "Re-run agent" : "Run agent"}</button>`}
+    </div><div class="muted small" style="margin-top:6px">In this prototype "queue to send" only records the decision. No message is actually sent.</div></div>
+  </div>`;
+  $("drawer").classList.add("open"); $("scrim").classList.add("open");
+  $("closeDrawer").onclick = closeDrawer;
+  if (!isCustom) {
+    const ap = $("approveBtn"), rj = $("rejectBtn"), un = $("undoBtn"), ro = $("runOneBtn");
+    if (ap) ap.onclick = () => decide(id, "Approved: queued (not sent)");
+    if (rj) rj.onclick = () => decide(id, "Sent back to a human");
+    if (un) un.onclick = () => decide(id, null);
+    if (ro) ro.onclick = () => runOne(id).then(render);
+  }
+  if (!keep) $("drawer").scrollTop = 0;
+}
+function closeDrawer() { S.open = null; $("drawer").classList.remove("open"); $("scrim").classList.remove("open"); }
+function decide(id, v) { if (v) S.approvals[id] = v; else delete S.approvals[id]; store.set("p3_approvals", S.approvals); render(); }
+
+// ------------------------------------------------------------------ live mode
+async function api(body) {
+  const post = () => fetch("api/agent", { method: "POST", headers: { "content-type": "application/json", "x-passcode": S.passcode || "" }, body: JSON.stringify(body) });
+  // If the connection drops or Vercel answers 502 / 503 / 504, wait 2 seconds and try once more.
+  let resp = null;
+  try { resp = await post(); } catch (e) { resp = null; }
+  if (!resp || [502, 503, 504].includes(resp.status)) {
+    await new Promise((r) => setTimeout(r, 2000));
+    resp = await post();
+  }
+  let data = {}; try { data = await resp.json(); } catch (e) {}
+  if (!resp.ok) throw new Error(data.error || ("HTTP " + resp.status));
+  return data;
+}
+async function unlock() {
+  if (S.live) { S.live = false; S.passcode = null; setMode(); render(); return; }
+  const p = window.prompt("Enter the live-mode passcode (set as DEMO_PASSCODE in Vercel):");
+  if (!p) return;
+  S.passcode = p;
+  $("unlockBtn").textContent = "Checking…";
+  try { const r = await api({ action: "test" }); S.live = true; setMode(); render();
+    $("progText").textContent = `Live mode on. Connected to ${r.model}.`; }
+  catch (e) { S.passcode = null; setMode(); alert("Could not unlock live mode: " + e.message); }
+}
+function setMode() {
+  $("modePill").className = "pill " + (S.live ? "live" : "demo");
+  $("modePill").textContent = S.live ? "Live mode: AI on" : "Demo mode: saved results";
+  $("unlockBtn").textContent = S.live ? "Lock" : "Unlock live mode";
+  $("runAll").disabled = !S.live || S.running;
+  $("cRun").disabled = !S.live;
+}
+async function runOne(id) {
+  try { const r = await api({ application_id: id, assumptions: S.A }); S.results[id] = r; delete S.approvals[id]; }
+  catch (e) { S.results[id] = Object.assign({}, S.results[id] || {}, { status: "Blocked: needs human", error: e.message,
+    trace: [{ step: "Agent call", actor: "Check", result: "Error", detail: e.message }] }); }
+  store.set("p3_live_results", liveOnly()); store.set("p3_approvals", S.approvals);
+}
+function liveOnly() { const o = {}; for (const [k, v] of Object.entries(S.results)) if (!(S.saved && S.saved.results && S.saved.results[k] === v)) o[k] = v; return o; }
+async function runAll() {
+  if (!S.live || S.running) return;
+  const all = rows().map((x) => x.r.application_id);
+  const todo = all.filter((id) => !S.results[id]);
+  if (!todo.length && !confirm("Every application already has a result. Re-run all of them?")) return;
+  const queue = todo.length ? todo : all;
+  S.running = true; setMode(); $("prog").style.display = "block";
+  let done = 0;
+  const worker = async () => { while (queue.length) { const id = queue.shift(); await runOne(id); done++;
+    $("prog").firstElementChild.style.width = (done / (done + queue.length)) * 100 + "%";
+    $("progText").textContent = `Running agent… ${done} done, ${queue.length} left`; render(); } };
+  await Promise.all([worker(), worker()]);
+  S.running = false; setMode(); $("progText").textContent = `Finished: ${done} applications processed. Use "Export run" to save them for the public demo.`;
+  render();
+}
+async function runCustom() {
+  const app = { application_id: "CUSTOM", application_status: "Stalled", rejection_message: $("cNote").value.trim() || null,
+    rejection_code: $("cCode").value.trim().toUpperCase() || null, preferred_language: $("cLang").value, whatsapp_opted_in: $("cWa").value,
+    step_reached: $("cStep").value, business_type: $("cType").value, days_since_last_activity: Number($("cDays").value),
+    attempts: Number($("cAtt").value), support_contacts: Number($("cCont").value), expected_monthly_tpv_inr_lakh: Number($("cTpv").value), city: "Test case" };
+  $("cMsg").textContent = "Running…";
+  try { const res = await api({ application: app, assumptions: S.A }); const id = "TEST-" + (Object.keys(S.custom).length + 1);
+    app.application_id = id; S.custom[id] = { app, res }; $("cMsg").textContent = `Done: ${res.status}`; openDrawer(id); }
+  catch (e) { $("cMsg").textContent = "Error: " + e.message; }
+}
+
+// ------------------------------------------------------------------ exports
+function download(name, text, type) {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function exportCsv() {
+  const cols = ["application_id", "priority_rank", "priority_score", "preferred_language", "channel", "expected_monthly_tpv_inr_lakh",
+    "days_since_last_activity", "attempts", "support_contacts", "step_reached", "rejection_code", "rejection_message", "diagnosis_source",
+    "keyword_safety_net", "ai_code", "ai_confidence", "diagnosed_code", "plain_meaning", "fixable", "route", "recoverable", "human_call",
+    "message_type", "agent_status", "human_decision", "whatsapp", "sms", "email_subject", "email_body", "reminder_day3", "final_day7",
+    "call_script", "back_translation_en", "safety_checks_passed", "failed_checks", "drafts", "follow_up_plan"];
+  const q = (v) => '"' + String(v === null || v === undefined ? "" : v).replace(/"/g, '""') + '"';
+  const lines = [cols.join(",")];
+  for (const x of rows().sort((a, b) => (a.r.priority_rank || 9999) - (b.r.priority_rank || 9999))) {
+    const m = (x.res && x.res.message) || {}, s = x.res && x.res.safety, ai = (x.res && x.res.ai_diagnosis) || {};
+    const v = { ...x.app, ...x.r, ai_code: ai.code, ai_confidence: ai.confidence, agent_status: (x.res && x.res.status) || statusOf(x),
+      human_decision: S.approvals[x.r.application_id] || "", ...m, safety_checks_passed: s ? (s.passed ? "Yes" : "No") : "",
+      failed_checks: s ? s.checks.filter((c) => !c.pass).map((c) => c.label).join("; ") : "", drafts: x.res ? x.res.drafts || "" : "",
+      follow_up_plan: (x.r.follow_up_plan.steps || []).join(" | ") };
+    lines.push(cols.map((c) => q(v[c])).join(","));
+  }
+  download("p3_agent_output.csv", "﻿" + lines.join("\r\n"), "text/csv;charset=utf-8");
+}
+function exportJson() {
+  const models = Object.values(S.results).map((r) => r && r.model).filter(Boolean);
+  const out = { generated_at: new Date().toISOString(), model: models[0] || (S.saved && S.saved.model) || null,
+    note: "Saved run of the onboarding recovery agent. Commit this file as saved_run.json so the public demo shows it.",
+    results: S.results };
+  download("saved_run.json", JSON.stringify(out, null, 1), "application/json");
+}
+
+// ------------------------------------------------------------------ controls
+function buildFilters() {
+  const langs = [...new Set(S.apps.map((a) => a.preferred_language))].sort();
+  $("fLang").innerHTML += langs.map((l) => `<option>${esc(l)}</option>`).join("");
+  $("fStatus").innerHTML += ["Not run", "Ready", "Approved", "Blocked", "Escalated", "Sent back"].map((s) => `<option value="${s}">${s}</option>`).join("");
+  ["fRoute", "fStatus", "fLang"].forEach((id) => ($(id).onchange = () => renderTable(rows())));
+  $("fQ").oninput = () => renderTable(rows());
+  document.querySelectorAll("th[data-sort]").forEach((th) => (th.onclick = () => {
+    const k = th.dataset.sort; S.sort = { key: k, dir: S.sort.key === k ? -S.sort.dir : 1 }; renderTable(rows()); }));
+  $("rows").onclick = (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) openDrawer(tr.dataset.id); };
+  $("scrim").onclick = closeDrawer;
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+  $("unlockBtn").onclick = unlock; $("runAll").onclick = runAll; $("cRun").onclick = runCustom;
+  $("exportCsv").onclick = exportCsv; $("exportJson").onclick = exportJson;
+  $("toggleAssump").onclick = () => $("assumpPanel").classList.toggle("open");
+  $("toggleStress").onclick = () => $("stressPanel").classList.toggle("open");
+  setMode();
+}
+function buildAssumptions() {
+  const f = [["maxDays", "Recoverable if inactive ≤ (days)"], ["maxAttempts", "Recoverable if attempts < (and human-call trigger)"],
+    ["decayDays", "Priority halves after (days)"], ["humanTpv", "Human call: TPV ≥ (Rs lakh / month)"], ["humanContacts", "Human call: support contacts ≥"]];
+  $("assumpForm").innerHTML = f.map(([k, l]) => `<label>${esc(l)}<input type="number" step="any" data-k="${k}" value="${S.A[k]}"></label>`).join("");
+  $("assumpForm").oninput = (e) => { const k = e.target.dataset.k; const v = Number(e.target.value); if (k && v > 0) { S.A[k] = v; render(); } };
+  $("assumpReset").onclick = () => { S.A = Object.assign({}, Rules.DEFAULT_ASSUMPTIONS); buildAssumptions(); render(); };
+}
+init();
+</script>
+</body>
+</html>

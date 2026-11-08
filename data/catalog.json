@@ -1,0 +1,119 @@
+{
+ "R01": {
+  "code": "R01",
+  "reviewer_reason": "PAN name does not match business name",
+  "plain_language_meaning": "The name on the PAN card is different from the business name entered.",
+  "fixable": "Yes",
+  "standard_fix": "Upload the PAN of the business (or proprietor) whose name matches the application, or correct the business name to match the PAN.",
+  "typical_days_to_fix": 1,
+  "theme": "Name / identity mismatch"
+ },
+ "R02": {
+  "code": "R02",
+  "reviewer_reason": "GST certificate invalid or mismatched",
+  "plain_language_meaning": "GSTIN is wrong, inactive, or belongs to a different legal name or address.",
+  "fixable": "Yes",
+  "standard_fix": "Enter the correct GSTIN, or upload a current GST certificate that matches the legal name and address.",
+  "typical_days_to_fix": 2,
+  "theme": "Name / identity mismatch"
+ },
+ "R03": {
+  "code": "R03",
+  "reviewer_reason": "Bank account name mismatch",
+  "plain_language_meaning": "The bank account holder name differs from the business or PAN name.",
+  "fixable": "Yes",
+  "standard_fix": "Use a current account in the business name (or proprietor's name for proprietorships), or upload a bank letter / cancelled cheque showing the matching name.",
+  "typical_days_to_fix": 2,
+  "theme": "Name / identity mismatch"
+ },
+ "R04": {
+  "code": "R04",
+  "reviewer_reason": "Bank verification failed",
+  "plain_language_meaning": "Account number or IFSC is wrong, or the account is inactive, so the Re 1 test credit failed.",
+  "fixable": "Yes",
+  "standard_fix": "Re-enter the account number and IFSC carefully; check the account is active and can receive credits.",
+  "typical_days_to_fix": 1,
+  "theme": "Bank details entered wrongly"
+ },
+ "R05": {
+  "code": "R05",
+  "reviewer_reason": "Document unreadable",
+  "plain_language_meaning": "The uploaded image or PDF is blurred, cropped, or password-protected.",
+  "fixable": "Yes",
+  "standard_fix": "Re-upload a clear, full-page colour scan in PDF/JPG/PNG under 5 MB.",
+  "typical_days_to_fix": 1,
+  "theme": "Document quality / missing document"
+ },
+ "R06": {
+  "code": "R06",
+  "reviewer_reason": "Website missing mandatory policy pages",
+  "plain_language_meaning": "Website or app lacks Terms & Conditions, Privacy Policy, Refund/Cancellation Policy or Contact details.",
+  "fixable": "Yes",
+  "standard_fix": "Add all four pages with working links and resubmit the website URL.",
+  "typical_days_to_fix": 3,
+  "theme": "Website not ready"
+ },
+ "R07": {
+  "code": "R07",
+  "reviewer_reason": "Website not live",
+  "plain_language_meaning": "Website is down, under construction, or needs a login to view products and prices.",
+  "fixable": "Yes",
+  "standard_fix": "Make the website publicly accessible with products, prices and contact details visible, then resubmit.",
+  "typical_days_to_fix": 3,
+  "theme": "Website not ready"
+ },
+ "R08": {
+  "code": "R08",
+  "reviewer_reason": "Address proof missing or outdated",
+  "plain_language_meaning": "No address proof, or the proof is older than 3 months or shows a different address.",
+  "fixable": "Yes",
+  "standard_fix": "Upload a recent utility bill, rent agreement or other valid address proof matching the application address.",
+  "typical_days_to_fix": 2,
+  "theme": "Document quality / missing document"
+ },
+ "R09": {
+  "code": "R09",
+  "reviewer_reason": "Signatory details incomplete",
+  "plain_language_meaning": "Authorised signatory or director ID is missing, or the details don't match the application.",
+  "fixable": "Yes",
+  "standard_fix": "Upload a valid ID of the authorised signatory and ensure the name and DOB match the application.",
+  "typical_days_to_fix": 2,
+  "theme": "Document quality / missing document"
+ },
+ "R10": {
+  "code": "R10",
+  "reviewer_reason": "Restricted business category",
+  "plain_language_meaning": "The business sells products or services we cannot support (for example gambling or prohibited goods).",
+  "fixable": "No",
+  "standard_fix": "Cannot be fixed. Politely close the application; do not suggest workarounds.",
+  "typical_days_to_fix": 0,
+  "theme": "Not fixable (restricted business)"
+ },
+ "R11": {
+  "code": "R11",
+  "reviewer_reason": "Declared category differs from website",
+  "plain_language_meaning": "The business category selected differs from what the website actually sells.",
+  "fixable": "Yes",
+  "standard_fix": "Select the correct category, or share a short note and evidence explaining the business model, for a second review.",
+  "typical_days_to_fix": 3,
+  "theme": "Website not ready"
+ },
+ "R12": {
+  "code": "R12",
+  "reviewer_reason": "Compliance / sanctions screening hit",
+  "plain_language_meaning": "The application matched a negative or sanctions list during screening.",
+  "fixable": "Needs compliance review",
+  "standard_fix": "Do not discuss the reason with the applicant. Route to the Compliance team and tell the applicant it is under review.",
+  "typical_days_to_fix": 0,
+  "theme": "Compliance review"
+ },
+ "R13": {
+  "code": "R13",
+  "reviewer_reason": "Abandoned application",
+  "plain_language_meaning": "No rejection. The applicant started the application but stopped without finishing.",
+  "fixable": "Yes",
+  "standard_fix": "Send a friendly reminder naming the exact step they stopped at, with a direct link to resume.",
+  "typical_days_to_fix": 1,
+  "theme": "Abandoned (no rejection)"
+ }
+}
