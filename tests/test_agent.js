@@ -79,6 +79,19 @@ const expect = (name, cond, extra) => { console.log((cond ? "PASS " : "FAIL ") +
   await runAgent({ app: get("A3051"), apps, catalog, callModel: async (s, msgs) => { if (s === P10.DIAGNOSE_SYSTEM) diag10++; return spy10.callModel(s, msgs); } });
   expect("Keyword-forced R10 still gets the AI second check", diag10 === 1, diag10);
 
+  // 11. The AI's first draft is cut off (length limit) -> clear trace, shorter rewrite asked, rewrite passes
+  const spy11 = createMock(); let n11 = 0, revise11 = "";
+  const cut11 = async (s, msgs) => {
+    if (s === P10.WRITE_SYSTEM && ++n11 === 1) { const e = new Error("AI reply was cut off (too long)"); e.cutOff = true; e.partial = '{"whatsapp": "Razorpay'; throw e; }
+    if (s === P10.WRITE_SYSTEM) revise11 = msgs[msgs.length - 1].content;
+    return spy11.callModel(s, msgs);
+  };
+  const r11 = await runAgent({ app: get("A3020"), apps, catalog, callModel: cut11 });
+  expect("Cut-off first draft -> trace says 'AI reply was cut off (too long)'",
+    r11.trace.some((t) => t.step === "Write messages" && t.result === "AI reply was cut off (too long)"), r11.trace.map((t) => t.step + ": " + t.result));
+  expect("Cut-off first draft -> rewrite asked to be shorter, then ready",
+    r11.drafts === 2 && r11.status === "Ready for approval" && /cut off because it was too long/.test(revise11), [r11.drafts, r11.status]);
+
 
   console.log(fails ? `\n${fails} FAILED` : "\nAll agent tests passed");
 })();

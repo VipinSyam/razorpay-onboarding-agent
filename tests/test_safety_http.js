@@ -31,6 +31,16 @@ expect("Approval promise caught", f.includes("No promise of approval"), f);
 // A clean English nudge passes
 f = failedLabels(get("A3100"), { whatsapp: "Hi! Razorpay here. Your website review is paused because the website needs Terms, Privacy, Refund policy and Contact pages. Add them and resubmit: {resume_link} - Razorpay Onboarding Team", reminder_day3: "Reminder from Razorpay: add the policy pages and resubmit {resume_link}", final_day7: "Last reminder from Razorpay: {resume_link}" });
 expect("Clean message passes all checks", f.length === 0, f);
+// The same clean message, but the day 7 reminder does not say Razorpay
+{
+  const app = get("A3100"), r = R.runRules(app, catalog);
+  const res = R.safetyCheck(app, r, { whatsapp: "Hi! Razorpay here. Your website review is paused because the website needs Terms, Privacy, Refund policy and Contact pages. Add them and resubmit: {resume_link} - Razorpay Onboarding Team", reminder_day3: "Reminder from Razorpay: add the policy pages and resubmit {resume_link}", final_day7: "Last reminder: {resume_link}" });
+  const c = res.checks.find((x) => x.label === "Says it is from Razorpay");
+  expect("Reminder without 'Razorpay' is caught (names final_day7)", c && !c.pass && /final_day7/.test(c.detail) && !/reminder_day3/.test(c.detail), c);
+}
+// Email + SMS: an SMS without 'Razorpay' is caught even when the email has it
+f = failedLabels(get("A3031"), { sms: "Aapka GST verify nahi hua, theek karein: {resume_link}", email_subject: "Razorpay: GST check", email_body: "Namaste, Razorpay Onboarding Team: GST theek karein {resume_link}", reminder_day3: "Razorpay: GST {resume_link}", final_day7: "Razorpay: last reminder, GST {resume_link}", back_translation_en: "Your GST was not verified at KYC documents step, fix GST" });
+expect("SMS without 'Razorpay' is caught", f.includes("Says it is from Razorpay"), f);
 
 // ---- HTTP wrapper with a fake Anthropic API
 (async () => {
@@ -118,7 +128,29 @@ expect("Clean message passes all checks", f.length === 0, f);
     { status: r.body.status, reason: r.body.blocked_reason, calls: n });
   expect("Blocked reason is shown in the trace", r.body.trace.some((t) => t.detail === handler.TIME_LIMIT_REASON), r.body.trace);
 
-  Object.assign(L, saved); global.fetch = goodFetch;
+  Object.assign(L, saved);
+
+  // d) Anthropic says stop_reason "max_tokens" on the first draft -> clear trace step, shorter rewrite asked, then ready
+  let writeCalls = 0, reviseText = "";
+  const sentMaxTokens = [];
+  global.fetch = async (url, opts) => {
+    const body = JSON.parse(opts.body);
+    sentMaxTokens.push(body.max_tokens);
+    if (body.system.startsWith("You write")) {
+      writeCalls++;
+      if (writeCalls === 1) return { ok: true, status: 200, json: async () => ({ stop_reason: "max_tokens", content: [{ type: "text", text: '{"whatsapp": "Razorpay: aapka GST' }] }) };
+      reviseText = body.messages[body.messages.length - 1].content;
+    }
+    return goodFetch(url, opts);
+  };
+  r = await call("POST", { "x-passcode": "secret" }, { application_id: "A3031" });
+  expect("Cut-off reply -> clear trace step 'AI reply was cut off (too long)'",
+    r.code === 200 && r.body.trace.some((t) => t.step === "Write messages" && t.result === "AI reply was cut off (too long)"), r.body.trace && r.body.trace.map((t) => t.step + ": " + t.result));
+  expect("Cut-off reply -> rewrite asked to be shorter, then ready",
+    r.body.drafts === 2 && r.body.status === "Ready for approval" && /cut off because it was too long/.test(reviseText), { drafts: r.body.drafts, status: r.body.status, revise: reviseText.slice(0, 120) });
+  expect("Requests ask for up to 4000 tokens", sentMaxTokens.length > 0 && sentMaxTokens.every((n) => n === 4000), sentMaxTokens);
+
+  global.fetch = goodFetch;
   delete process.env.DEMO_PASSCODE;
   r = await call("POST", { "x-passcode": "secret" }, { application_id: "A3031" });
   expect("No passcode configured -> live mode off (403)", r.code === 403, r);

@@ -13,8 +13,10 @@
  *   DEMO_PASSCODE      (required)   a long secret passcode; live mode stays OFF if this is not set
  *   ANTHROPIC_MODEL    (optional)   defaults to claude-sonnet-5-5
  *
- * Time limits: Vercel stops this function after 60 seconds (vercel.json). We stop ourselves
- * earlier, at 50 seconds, so the page always gets a clear answer instead of a crash.
+ * Time limits: Vercel stops this function after 120 seconds (vercel.json; the Hobby plan with
+ * Fluid compute allows up to 300). We stop ourselves earlier, at 110 seconds, so the page always
+ * gets a clear answer instead of a crash. One AI call may take up to 45 seconds, so a case that
+ * needs a short note reading, a draft AND a rewrite (about 5 + 45 + 45 = 95 s) still fits.
  */
 "use strict";
 const crypto = require("crypto");
@@ -24,11 +26,12 @@ const { runAgent } = require("../lib/agent-core.js");
 
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
 const API_URL = "https://api.anthropic.com/v1/messages";
+const MAX_TOKENS = 4000; // Kannada / Tamil text uses many tokens; 2000 cut long replies off
 
-// Kept in one object so the tests can shrink them (they cannot wait 25 seconds).
+// Kept in one object so the tests can shrink them (they cannot wait 45 seconds).
 const LIMITS = {
-  callTimeoutMs: 25000,        // the longest we wait for one AI reply
-  budgetMs: 50000,             // total time allowed for one request
+  callTimeoutMs: 45000,        // the longest we wait for one AI reply
+  budgetMs: 110000,            // total time allowed for one request (vercel.json maxDuration 120 - 10 spare)
   wrongPasscodeDelayMs: 1500,  // pause before answering a wrong passcode (slows down guessing)
 };
 const TIME_LIMIT_REASON = "Time limit reached, re-run this application";
@@ -67,6 +70,15 @@ function timeLimitError() {
   return e;
 }
 
+// The AI stopped because it reached MAX_TOKENS: the reply is incomplete. agent-core.js logs this clearly
+// and asks for a shorter rewrite.
+function cutOffError(partialText) {
+  const e = new Error("AI reply was cut off (too long)");
+  e.cutOff = true;
+  e.partial = partialText;
+  return e;
+}
+
 // Makes the AI caller for ONE request. Every call and every retry must fit in what is left of the budget.
 function makeCallModel(startedAt) {
   const left = () => LIMITS.budgetMs - (Date.now() - startedAt);
@@ -89,7 +101,7 @@ function makeCallModel(startedAt) {
             "x-api-key": process.env.ANTHROPIC_API_KEY,
             "anthropic-version": "2023-06-01",
           },
-          body: JSON.stringify({ model: MODEL, max_tokens: 2000, system, messages }),
+          body: JSON.stringify({ model: MODEL, max_tokens: MAX_TOKENS, system, messages }),
         });
         if (resp.ok) data = await resp.json();
         else errText = await resp.text();
@@ -102,7 +114,11 @@ function makeCallModel(startedAt) {
       } finally {
         clearTimeout(timer);
       }
-      if (resp.ok) return (data.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
+      if (resp.ok) {
+        const text = (data.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
+        if (data.stop_reason === "max_tokens") throw cutOffError(text);
+        return text;
+      }
       if ((resp.status === 429 || resp.status >= 500) && busyRetries < 2) {
         const wait = 1500 * (busyRetries + 1);
         if (!fits(wait)) throw timeLimitError();

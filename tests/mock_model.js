@@ -21,7 +21,7 @@ function makeMessages(facts, opts) {
   const m = { whatsapp: null, sms: null, email_subject: null, email_body: null, reminder_day3: null, final_day7: null,
     call_script: null, back_translation_en: null };
   if (wa) m.whatsapp = main; else { m.sms = main.slice(0, 140); m.email_subject = "Razorpay application"; m.email_body = main; }
-  if (t === "nudge") { m.reminder_day3 = "Reminder" + link; m.final_day7 = "Last reminder" + link; }
+  if (t === "nudge") { m.reminder_day3 = "Razorpay reminder" + link; m.final_day7 = "Razorpay: last reminder" + link; }
   if (t === "call_script") m.call_script = "Greet the merchant, explain the issue, walk through the fix.";
   const step = facts.step_where_they_stopped || "";
   const en = t === "closure" ? "Razorpay cannot support this business under its policy. Thank you."
