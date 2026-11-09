@@ -7,204 +7,425 @@
 <title>Onboarding Recovery Agent | Razorpay Campus AI Build-a-thon (Problem 3)</title>
 <style>
   :root{
-    --ink:#0f1b2d; --ink2:#43506a; --mute:#7b869c; --line:#e3e8f0; --bg:#f5f7fb; --card:#fff;
-    --navy:#0b2a5b; --blue:#2463eb; --blue-soft:#e8efff;
-    --rule:#2463eb; --ai:#7c3aed; --check:#0f8a5f; --human:#c2410c;
+    --ink:#0f1b2d; --ink2:#43506a; --mute:#6b778c; --line:#e3e8f0; --bg:#f3f5f9; --card:#fff;
+    --navy:#0b2a5b; --navy2:#123a7a; --blue:#2463eb; --blue-soft:#e8efff;
+    --rule:#2463eb; --rule-soft:#e8efff; --ai:#7c3aed; --ai-soft:#f1eafe;
+    --check:#0f8a5f; --check-soft:#e3f6ee; --human:#c2410c; --human-soft:#fdeee4;
     --ok:#0f8a5f; --ok-soft:#e3f6ee; --warn:#b45309; --warn-soft:#fff4e0; --bad:#c62828; --bad-soft:#fdeaea;
-    --violet-soft:#f1eafe; --r:12px;
+    --r:12px; --shadow:0 1px 2px #0f1b2d0d, 0 2px 8px #0f1b2d08;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Kannada",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.45}
-  header{background:var(--navy);color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  header h1{font-size:19px;margin:0 0 2px;font-weight:700;letter-spacing:.2px}
-  header p{margin:0;color:#c7d3ea;font-size:13px}
-  .pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:600}
-  .pill.demo{background:#ffffff1f;color:#fff}
-  .pill.live{background:#16a34a;color:#fff}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans","Noto Sans Devanagari","Noto Sans Tamil","Noto Sans Kannada",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.5}
+  h1,h2,h3,h4{line-height:1.25}
   button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;font-weight:600;font-size:13px}
   button:hover{border-color:#b9c4d8}
+  button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
   button.primary{background:var(--blue);border-color:var(--blue);color:#fff}
   button.primary:hover{background:#1d54cc}
   button.ghost-light{background:transparent;color:#fff;border-color:#ffffff55}
   button:disabled{opacity:.5;cursor:not-allowed}
-  main{max-width:1320px;margin:0 auto;padding:20px 24px 60px}
-  .notice{background:var(--blue-soft);border:1px solid #cfdcff;color:#1e3a8a;border-radius:var(--r);padding:10px 14px;margin-bottom:16px;font-size:13px}
+  input,select,textarea{font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+
+  /* header + tabs */
+  header{background:var(--navy);color:#fff}
+  .hbar{max-width:1320px;margin:0 auto;padding:16px 24px 10px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .hbar h1{font-size:19px;margin:0 0 2px;font-weight:700;letter-spacing:.2px}
+  .hbar p{margin:0;color:#c7d3ea;font-size:13px;max-width:720px}
+  .hright{display:flex;gap:8px;align-items:center}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+  .pill.demo{background:#ffffff1f;color:#fff} .pill.live{background:#16a34a;color:#fff}
+  nav.tabs{max-width:1320px;margin:0 auto;padding:0 16px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs button{background:transparent;border:0;border-radius:8px 8px 0 0;color:#c7d3ea;padding:10px 14px;white-space:nowrap;font-size:13.5px}
+  nav.tabs button:hover{color:#fff;background:#ffffff12}
+  nav.tabs button[aria-selected="true"]{background:var(--bg);color:var(--navy)}
+  main{max-width:1320px;margin:0 auto;padding:20px 24px 40px}
+  section.tab{display:none} section.tab.on{display:block}
+
+  /* common blocks */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+  .card h2{font-size:15px;margin:0 0 4px} .card h3{font-size:14px;margin:0 0 6px}
+  .sub{color:var(--mute);font-size:12.5px;margin:0 0 12px}
+  .stack{display:grid;gap:16px}
+  .grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .notice{background:var(--blue-soft);border:1px solid #cfdcff;color:#1e3a8a;border-radius:var(--r);padding:10px 14px;font-size:13px}
   .notice.warn{background:var(--warn-soft);border-color:#f6d9a8;color:#7a4a06}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
-  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
-  .kpi .v{font-size:24px;font-weight:700;letter-spacing:-.3px}
+  .headline{font-size:20px;font-weight:700;margin:0 0 4px;letter-spacing:-.2px}
+  .headline b{color:var(--blue)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)}
+  .kpi .v{font-size:24px;font-weight:700;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
   .kpi .l{color:var(--ink2);font-size:12.5px;margin-top:2px}
   .kpi .s{color:var(--mute);font-size:12px;margin-top:4px}
-  .grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-bottom:16px}
-  @media (max-width:900px){.grid2{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
-  .card h2{font-size:15px;margin:0 0 4px}
-  .card .sub{color:var(--mute);font-size:12.5px;margin:0 0 12px}
-  .bar{display:grid;grid-template-columns:230px 1fr 120px;align-items:center;gap:10px;margin:7px 0;font-size:13px}
+  .money{border-left:4px solid var(--ok)}
+  .money .v{color:var(--ok)}
+  .assume{display:inline-block;font-size:11px;font-weight:700;color:var(--warn);background:var(--warn-soft);border-radius:5px;padding:1px 6px;margin-bottom:6px;letter-spacing:.3px}
+  .flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0 10px}
+  .flow span{font-size:12px;padding:4px 9px;border-radius:6px;font-weight:600}
+  .flow i{color:var(--mute);font-style:normal}
+  .t-Rule{background:var(--rule-soft);color:var(--rule)} .t-AI{background:var(--ai-soft);color:var(--ai)}
+  .t-Check{background:var(--check-soft);color:var(--check)} .t-Human{background:var(--human-soft);color:var(--human)}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:.2px}
+  .demo-btns{display:grid;gap:8px}
+  .demo-btns button{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:10px 12px}
+  .demo-btns button span{color:var(--mute);font-weight:500;font-size:12.5px}
+  .bar{display:grid;grid-template-columns:minmax(120px,210px) 1fr minmax(96px,auto);align-items:center;gap:10px;margin:8px 0;font-size:13px}
   .bar .track{background:#eef2f8;border-radius:6px;height:14px;overflow:hidden}
   .bar .fill{background:var(--blue);height:100%;border-radius:6px}
-  .bar .num{color:var(--ink2);font-variant-numeric:tabular-nums;text-align:right}
-  .flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0 12px}
-  .flow span{font-size:12px;padding:4px 8px;border-radius:6px;font-weight:600}
-  .flow i{color:var(--mute);font-style:normal}
-  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:.2px}
-  .t-Rule{background:#e8efff;color:var(--rule)} .t-AI{background:var(--violet-soft);color:var(--ai)}
-  .t-Check{background:var(--ok-soft);color:var(--check)} .t-Human{background:#fdeee4;color:var(--human)}
+  .bar .num{color:var(--ink2);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+  .muted{color:var(--mute)} .small{font-size:12px}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  ul.clean{margin:6px 0 0;padding-left:18px} ul.clean li{margin:3px 0}
+
+  /* badges */
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
+  .b-ready{background:var(--blue-soft);color:var(--blue)} .b-ok{background:var(--ok-soft);color:var(--ok)}
+  .b-bad{background:var(--bad-soft);color:var(--bad)} .b-warn{background:var(--warn-soft);color:var(--warn)}
+  .b-grey{background:#eef1f6;color:var(--ink2)} .b-violet{background:var(--ai-soft);color:var(--ai)}
+  .b-close{background:#fdf0f0;color:#b42323;border:1px solid #f5cfcf} .b-comp{background:#fff8eb;color:#9a5b07;border:1px solid #f6dfb3}
+
+  /* queues */
+  .qtabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+  .qtabs button{display:flex;align-items:center;gap:8px;padding:8px 12px}
+  .qtabs button .c{background:#eef1f6;color:var(--ink2);border-radius:999px;padding:0 8px;font-size:12px}
+  .qtabs button[aria-pressed="true"]{border-color:var(--blue);color:var(--blue);background:var(--blue-soft)}
+  .qtabs button[aria-pressed="true"] .c{background:var(--blue);color:#fff}
+  .qtabs .attn[aria-pressed="true"]{border-color:var(--warn);color:var(--warn);background:var(--warn-soft)}
+  .qtabs .attn[aria-pressed="true"] .c{background:var(--warn)}
   .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:4px 0 10px}
-  .toolbar select,.toolbar input{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:13px}
   .toolbar .spacer{flex:1}
-  .progress{height:6px;background:#e7ecf4;border-radius:4px;overflow:hidden;margin:6px 0 10px;display:none}
+  .qnote{font-size:12.5px;color:var(--ink2);background:#f7f9fc;border:1px dashed #cdd6e4;border-radius:8px;padding:8px 12px;margin:0 0 10px}
+  .batchbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 10px}
+  .progress{height:6px;background:#e7ecf4;border-radius:4px;overflow:hidden;margin:6px 0 4px;display:none}
   .progress div{height:100%;background:var(--ai);width:0%}
   table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:13px}
-  th{background:#f0f3f9;text-align:left;font-weight:600;color:var(--ink2);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer;user-select:none}
-  td{padding:8px 10px;border-bottom:1px solid #eef1f6;vertical-align:top}
+  th{background:#f0f3f9;text-align:left;font-weight:600;color:var(--ink2);padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th[data-sort]{cursor:pointer;user-select:none} th[data-sort]:hover{color:var(--ink)}
+  th .arrow{font-size:10px;margin-left:3px;color:var(--blue)}
+  td{padding:9px 10px;border-bottom:1px solid #eef1f6;vertical-align:top}
   tr:last-child td{border-bottom:none}
-  tbody tr{cursor:pointer} tbody tr:hover td{background:#f8faff}
-  .num{text-align:right;font-variant-numeric:tabular-nums}
-  .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600;white-space:nowrap}
-  .b-ok{background:var(--ok-soft);color:var(--ok)} .b-warn{background:var(--warn-soft);color:var(--warn)}
-  .b-bad{background:var(--bad-soft);color:var(--bad)} .b-blue{background:var(--blue-soft);color:var(--blue)}
-  .b-grey{background:#eef1f6;color:var(--ink2)} .b-violet{background:var(--violet-soft);color:var(--ai)}
-  .panel{display:none;margin:0 0 14px} .panel.open{display:block}
-  .form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-  .form label{font-size:12px;color:var(--ink2);display:flex;flex-direction:column;gap:4px}
-  .form input,.form select,.form textarea{font:inherit;padding:7px 9px;border:1px solid var(--line);border-radius:8px;font-size:13px}
+  tbody tr.row{cursor:pointer} tbody tr.row:hover td{background:#f8faff}
+  td.sel,th.sel{width:34px;text-align:center}
+  td.sel input,th.sel input{width:16px;height:16px;padding:0;cursor:pointer}
+  .empty{padding:22px;text-align:center;color:var(--mute)}
+  .empty b{color:var(--ok)}
+
   /* drawer */
-  .scrim{position:fixed;inset:0;background:#0f1b2d55;display:none;z-index:20}
-  .drawer{position:fixed;top:0;right:0;height:100%;width:min(760px,100%);background:#fff;z-index:21;transform:translateX(100%);transition:transform .2s ease;overflow-y:auto;box-shadow:-10px 0 30px #0f1b2d22}
+  .scrim{position:fixed;inset:0;background:#0f1b2d66;display:none;z-index:20}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(820px,100%);background:#fff;z-index:21;transform:translateX(100%);transition:transform .2s ease;overflow-y:auto;box-shadow:-10px 0 30px #0f1b2d22}
   .drawer.open{transform:none} .scrim.open{display:block}
-  .dh{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:2}
+  .dh{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:14px 20px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;z-index:2}
   .dh h3{margin:0;font-size:17px}
   .db{padding:16px 20px 40px}
-  .sec{margin:0 0 18px}
-  .sec h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);margin:0 0 8px}
+  .sec{margin:0 0 20px}
+  .sec > h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);margin:0 0 8px}
+  .ba{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+  .ba .box{border-radius:10px;padding:10px 12px;font-size:13px}
+  .ba .before{background:#fffbea;border:1px dashed #e9cf73}
+  .ba .after{background:#eefaf3;border:1px solid #bfe6d0}
+  .ba .lab{font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .ba .arrow{align-self:center;color:var(--mute);font-size:18px}
+  .rewrite{background:var(--warn-soft);border:1px solid #f6d9a8;color:#7a4a06;border-radius:10px;padding:10px 12px;font-size:13px;margin:0 0 14px}
+  .rewrite.bad{background:var(--bad-soft);border-color:#f3c0c0;color:#8a1c1c}
+  .mtabs{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+  .mtabs button{padding:5px 10px;font-size:12.5px}
+  .mtabs button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .mtabs .spacer{flex:1}
+  .switch{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink2);cursor:pointer;user-select:none}
+  .switch input{width:16px;height:16px;padding:0}
+  .preview{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .phone{width:300px;max-width:100%;border:9px solid #1f2937;border-radius:30px;background:#efeae2;padding:22px 10px 18px;position:relative;min-height:220px}
+  .phone:before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:70px;height:6px;border-radius:4px;background:#374151}
+  .phone .who{font-size:11px;color:#54656f;text-align:center;margin:0 0 10px;padding-bottom:6px;border-bottom:1px solid #0000000f;font-weight:600}
+  .bubble{background:#fff;border-radius:10px 10px 10px 2px;padding:8px 10px;font-size:13px;white-space:pre-wrap;word-break:break-word;box-shadow:0 1px 1px #0000001a;margin:0 0 8px}
+  .bubble.wa{background:#d9fdd3}
+  .phone.sms{background:#f2f4f7} .phone.sms .bubble{background:#e9ecf1}
+  .emailcard{flex:1;min-width:240px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+  .emailcard .eh{background:#f6f8fc;padding:8px 12px;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2)}
+  .emailcard .eh b{color:var(--ink);font-size:13px}
+  .emailcard .eb{padding:10px 12px;white-space:pre-wrap;word-break:break-word;font-size:13px}
+  .en{background:#f6f8fc;border-left:3px solid #94a3b8;border-radius:6px;padding:6px 9px;font-size:12.5px;color:var(--ink2);margin:0 0 10px;white-space:pre-wrap;word-break:break-word}
+  .en .lab{font-size:10.5px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:2px}
+  .script{border:1px solid var(--line);border-radius:10px;padding:10px 12px;white-space:pre-wrap;word-break:break-word;font-size:13px;background:#fffdf8;flex:1;min-width:240px}
   .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .facts div{background:#f6f8fc;border-radius:8px;padding:7px 10px}
+  .facts div{background:#f6f8fc;border-radius:8px;padding:7px 10px;font-size:13px}
   .facts b{display:block;font-size:11px;color:var(--mute);font-weight:600}
-  .note{background:#fffbea;border:1px dashed #e9cf73;border-radius:8px;padding:9px 12px;font-size:13px}
-  .trace{border-left:2px solid var(--line);margin-left:6px;padding-left:14px}
+  .facts .wide{grid-column:span 3}
+  .trace{border-left:2px solid var(--line);margin-left:6px;padding-left:16px}
   .step{position:relative;margin:0 0 10px}
-  .step:before{content:"";position:absolute;left:-20px;top:5px;width:10px;height:10px;border-radius:50%;background:#cbd5e1}
+  .step:before{content:"";position:absolute;left:-22px;top:5px;width:10px;height:10px;border-radius:50%;background:#cbd5e1;box-shadow:0 0 0 2px #fff}
   .step.Rule:before{background:var(--rule)} .step.AI:before{background:var(--ai)} .step.Check:before{background:var(--check)} .step.Human:before{background:var(--human)}
   .step .h{font-weight:600} .step .d{color:var(--ink2);font-size:12.5px;margin-top:2px;word-break:break-word}
-  .msg{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:0 0 10px;white-space:pre-wrap;word-break:break-word}
-  .msg .lab{font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-  .msg.wa{background:#e9fbe5;border-color:#c9efc0}
-  .msg.bt{background:#f6f8fc;font-size:13px;color:var(--ink2)}
   .checks{display:grid;grid-template-columns:1fr 1fr;gap:6px}
   .chk{font-size:12.5px;padding:6px 9px;border-radius:7px}
   .chk.p{background:var(--ok-soft)} .chk.f{background:var(--bad-soft)}
   .actions{display:flex;gap:8px;flex-wrap:wrap}
-  footer{color:var(--mute);font-size:12px;text-align:center;padding:20px}
-  .muted{color:var(--mute)}
-  .small{font-size:12px}
+  .legend{display:flex;gap:6px;flex-wrap:wrap}
+
+  /* safety + insight */
+  .bigs{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+  .big{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;box-shadow:var(--shadow)}
+  .big .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+  .big .l{font-size:12.5px;color:var(--ink2)}
+  .big.zero .v{color:var(--ok)}
+  .never li::marker{content:"✕  ";color:var(--bad)}
+  .does li::marker{content:"✓  ";color:var(--ai)}
+  .chklist{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;margin:0;padding:0;list-style:none}
+  .chklist li{font-size:13px;padding:8px 10px;background:#f7f9fc;border-radius:8px}
+  .chklist b{display:block;font-size:13px}
+  .earlier{border-left:4px solid var(--warn)}
+  .fix{border-left:4px solid var(--blue)}
+  .fix .big-q{font-size:16px;font-weight:700;margin:4px 0 8px}
+
+  /* settings */
+  .form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  .form label{font-size:12px;color:var(--ink2);display:flex;flex-direction:column;gap:4px}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(140%);background:var(--ink);color:#fff;border-radius:10px;padding:10px 14px;font-size:13px;display:flex;gap:12px;align-items:center;z-index:30;transition:transform .2s ease;max-width:calc(100% - 32px)}
+  .toast.on{transform:translateX(-50%)}
+  .toast button{background:transparent;color:#9ec1ff;border-color:#ffffff40;padding:4px 10px}
+
+  footer{color:var(--mute);font-size:12px;text-align:center;padding:12px 16px 28px}
+
+  /* responsive */
+  @media (max-width:1000px){.grid2,.grid3{grid-template-columns:1fr}}
+  @media (max-width:640px){
+    .hbar{padding:14px 16px 8px} main{padding:16px 16px 32px}
+    .hbar h1{font-size:17px}
+    .headline{font-size:17px}
+    .kpis{grid-template-columns:1fr 1fr}
+    .bar{grid-template-columns:1fr auto;grid-template-areas:"name num" "track track";gap:4px 10px}
+    .bar > div:first-child{grid-area:name} .bar .track{grid-area:track} .bar .num{grid-area:num}
+    table.cards, table.cards tbody, table.cards tr, table.cards td{display:block;width:100%}
+    table.cards thead{display:none}
+    table.cards{border:0;background:transparent;box-shadow:none}
+    table.cards tr.row{background:#fff;border:1px solid var(--line);border-radius:var(--r);margin:0 0 10px;padding:8px 12px;position:relative;box-shadow:var(--shadow)}
+    table.cards td{border:0;padding:3px 0;display:flex;justify-content:space-between;gap:12px;text-align:right}
+    table.cards td:before{content:attr(data-label);color:var(--mute);font-size:12px;font-weight:600;text-align:left}
+    table.cards td.sel{position:absolute;right:10px;top:10px;width:auto;display:block}
+    table.cards td.sel:before{content:none}
+    table.cards td.rankcell{padding-right:36px;font-weight:700}
+    table.cards td.idcell{display:block;text-align:left;padding-right:34px}
+    table.cards td.idcell:before{content:none}
+    table.cards td.empty{display:block;text-align:center}
+    table.cards td.empty:before{content:none}
+    .ba{grid-template-columns:1fr} .ba .arrow{transform:rotate(90deg);justify-self:center}
+    .facts{grid-template-columns:1fr 1fr} .facts .wide{grid-column:span 2}
+    .checks,.chklist{grid-template-columns:1fr}
+    .phone{width:100%}
+    .db{padding:14px 14px 32px} .dh{padding:12px 14px}
+  }
 </style>
 </head>
 <body>
 <header>
-  <div>
-    <h1>Onboarding Recovery Agent</h1>
-    <p>Finds why merchants stall in onboarding, decides what is safe to do, and drafts the right nudge in their language. Problem 3, Razorpay Campus AI Build-a-thon.</p>
+  <div class="hbar">
+    <div>
+      <h1>Onboarding Recovery Agent</h1>
+      <p>Finds why merchants stall in onboarding, decides what is safe to do, and drafts the right nudge in their language. Problem 3, Razorpay Campus AI Build-a-thon.</p>
+    </div>
+    <div class="hright">
+      <span id="modePill" class="pill demo">Demo mode: saved results</span>
+      <button id="unlockBtn" class="ghost-light">Unlock live mode</button>
+    </div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <span id="modePill" class="pill demo">Demo mode: saved results</span>
-    <button id="unlockBtn" class="ghost-light">Unlock live mode</button>
-  </div>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button role="tab" data-tab="overview">Overview</button>
+    <button role="tab" data-tab="queues">Work queues</button>
+    <button role="tab" data-tab="safety">Safety record</button>
+    <button role="tab" data-tab="insight">Product insight</button>
+    <button role="tab" data-tab="settings">Assumptions &amp; stress test</button>
+  </nav>
 </header>
 
 <main>
-  <div id="notice" class="notice">Loading…</div>
+  <div id="notice" class="notice" style="margin-bottom:16px">Loading…</div>
 
-  <section class="kpis" id="kpis"></section>
-
-  <section class="grid2">
-    <div class="card">
-      <h2>Why merchants are stuck (fixable cases)</h2>
-      <p class="sub">Grouped by root cause. Bars show number of applications; right column shows expected TPV at stake (Rs lakh / month).</p>
-      <div id="causes"></div>
-    </div>
-    <div class="card">
-      <h2>How the agent works</h2>
-      <p class="sub">Rules make every decision that can harm a merchant. AI only reads messy notes and writes messages. Nothing is sent without a human.</p>
-      <div class="flow">
-        <span class="t-Rule">Rule: diagnose</span><i>→</i>
-        <span class="t-AI">AI: read unclear note</span><i>→</i>
-        <span class="t-Rule">Rule: accept or escalate</span><i>→</i>
-        <span class="t-Rule">Rule: route, priority, channel</span><i>→</i>
-        <span class="t-AI">AI: write message</span><i>→</i>
-        <span class="t-Check">Check: up to 11 safety checks</span><i>→</i>
-        <span class="t-AI">AI: rewrite once if failed</span><i>→</i>
-        <span class="t-Human">Human: approve</span>
+  <!-- ============================== TAB 1: OVERVIEW -->
+  <section class="tab" id="tab-overview" role="tabpanel">
+    <div class="stack">
+      <div>
+        <p class="headline" id="headline"></p>
+        <p class="muted" style="margin:0">Synthetic Data Pack, snapshot 30 Sep 2026. Every number on this page is computed from the data.</p>
       </div>
-      <div id="insight" class="small"></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="kpi money" id="money"></div>
+      <div class="grid2">
+        <div class="card">
+          <h2>How the agent works</h2>
+          <p class="sub">Rules make every decision that can harm a merchant. AI only reads messy notes and writes messages. Nothing is sent without a human.</p>
+          <div class="flow">
+            <span class="t-Rule">Rule: diagnose</span><i>→</i>
+            <span class="t-AI">AI: read unclear note</span><i>→</i>
+            <span class="t-Rule">Rule: accept, route, priority, channel</span><i>→</i>
+            <span class="t-AI">AI: write message</span><i>→</i>
+            <span class="t-Check">Check: safety checks</span><i>→</i>
+            <span class="t-AI">AI: rewrite once if failed</span><i>→</i>
+            <span class="t-Human">Human: approve</span>
+          </div>
+          <div class="legend small muted">Colours mean the same thing everywhere on this page: <span class="tag t-Rule">Rule</span> <span class="tag t-AI">AI</span> <span class="tag t-Check">Check</span> <span class="tag t-Human">Human</span></div>
+        </div>
+        <div class="card">
+          <h2>Start the demo</h2>
+          <p class="sub">Three cases that show the whole story. Each opens the full agent record.</p>
+          <div class="demo-btns" id="demoBtns"></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section class="panel card" id="assumpPanel">
-    <h2>Assumptions (what-if)</h2>
-    <p class="sub">Change a number and every rule-based column and total updates instantly. Messages already written are not rewritten; re-run the agent to refresh them.</p>
-    <div class="form" id="assumpForm"></div>
-    <div style="margin-top:10px"><button id="assumpReset">Reset to agreed values</button></div>
-  </section>
-
-  <section class="panel card" id="stressPanel">
-    <h2>Stress test: try your own application</h2>
-    <p class="sub">Live mode only. Use it to test tricky cases (for example a restricted business phrased in new words). Results open in the side panel and are not added to the main table.</p>
-    <div class="form">
-      <label>Reviewer note (leave blank for "merchant just stopped")<textarea id="cNote" rows="2">We cannot onboard this line of business under our policy</textarea></label>
-      <label>Rejection code (optional)<input id="cCode" placeholder="e.g. R02"></label>
-      <label>Language<select id="cLang"><option>English</option><option>Hinglish</option><option>Hindi</option><option>Tamil</option><option>Kannada</option><option>Marathi</option></select></label>
-      <label>WhatsApp opted in<select id="cWa"><option>Yes</option><option>No</option></select></label>
-      <label>Step reached<select id="cStep"><option>KYC docs</option><option>Bank verification</option><option>Website/App review</option><option>Business details</option></select></label>
-      <label>Business type<select id="cType"><option>Proprietorship</option><option>Partnership</option><option>Private Limited</option><option>LLP</option><option>Trust / NGO</option></select></label>
-      <label>Days inactive<input id="cDays" type="number" value="5"></label>
-      <label>Attempts<input id="cAtt" type="number" value="1"></label>
-      <label>Support contacts<input id="cCont" type="number" value="0"></label>
-      <label>Expected TPV (Rs lakh / month)<input id="cTpv" type="number" value="10" step="0.1"></label>
+  <!-- ============================== TAB 2: WORK QUEUES -->
+  <section class="tab" id="tab-queues" role="tabpanel">
+    <div class="qtabs" id="qtabs" role="group" aria-label="Queues"></div>
+    <div class="toolbar">
+      <select id="fLang" aria-label="Filter by language"><option value="all">All languages</option></select>
+      <input id="fQ" placeholder="Search ID or code…" size="16" aria-label="Search">
+      <span class="spacer"></span>
+      <button id="exportCsv">Download table (Excel CSV)</button>
+      <button id="exportJson" title="Save this run so the public demo shows it">Export run (saved_run.json)</button>
+      <button id="runAll" class="primary">Run agent on all</button>
     </div>
-    <div style="margin-top:10px"><button class="primary" id="cRun">Run agent on this test case</button> <span id="cMsg" class="muted small"></span></div>
+    <div class="progress" id="prog"><div></div></div>
+    <div id="progText" class="muted small" style="margin-bottom:6px"></div>
+    <div id="qhead"></div>
+    <table id="qtable" class="cards">
+      <thead id="qthead"></thead>
+      <tbody id="rows"></tbody>
+    </table>
   </section>
 
-  <div class="toolbar">
-    <select id="fRoute"><option value="all">All routes</option><option>Nudge to fix</option><option>Close politely</option><option>Route to Compliance</option></select>
-    <select id="fStatus"><option value="all">All statuses</option></select>
-    <select id="fLang"><option value="all">All languages</option></select>
-    <input id="fQ" placeholder="Search ID or code…" size="16">
-    <span class="spacer"></span>
-    <button id="toggleAssump">Assumptions</button>
-    <button id="toggleStress">Stress test</button>
-    <button id="exportCsv">Download table (Excel CSV)</button>
-    <button id="exportJson" title="Save this run so the public demo shows it">Export run (saved_run.json)</button>
-    <button id="runAll" class="primary">Run agent on all</button>
-  </div>
-  <div class="progress" id="prog"><div></div></div>
-  <div id="progText" class="muted small"></div>
+  <!-- ============================== TAB 3: SAFETY RECORD -->
+  <section class="tab" id="tab-safety" role="tabpanel">
+    <div class="stack">
+      <div>
+        <p class="headline">The checker, not the AI, decides whether a message is safe.</p>
+        <p class="muted" style="margin:0" id="safetySub"></p>
+      </div>
+      <div class="bigs" id="safetyBigs"></div>
+      <div class="card">
+        <h2>What the checker caught in this run</h2>
+        <p class="sub">Drafts the safety check rejected. The AI had one chance to rewrite; if the rewrite had failed too, the case would have been blocked for a human.</p>
+        <table id="caughtTable" class="cards"></table>
+      </div>
+      <div class="card earlier">
+        <h2>Earlier run</h2>
+        <p style="margin:0">Run 1: 3 replies in long Kannada/Tamil messages (A3020, A3023, A3040) were cut off by a length limit. They were <b>blocked, never marked ready</b>. Fixed by raising the limit and detecting cut-offs; run 2 had 0.</p>
+        <p class="small muted" style="margin:6px 0 0">Source: submission/run_log.md in the repository.</p>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <h2>What AI is never allowed to decide</h2>
+          <p class="sub">These are fixed rules (lib/rules.js), the same rules as the Step 1 Excel rules engine.</p>
+          <ul class="clean never">
+            <li>Closing an application (restricted business, R10)</li>
+            <li>Routing to Compliance (R12)</li>
+            <li>Who is recoverable</li>
+            <li>Priority</li>
+            <li>Channel (WhatsApp only if the merchant opted in)</li>
+            <li>Who gets a human call</li>
+            <li>Sending anything: a person approves every message</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>What AI does</h2>
+          <p class="sub">Two jobs only, both checked by rules.</p>
+          <ul class="clean does">
+            <li>Reads the 4 reviewer notes that have no code. The rules accept the reading only if it is high-confidence, and never accept a closure or Compliance reading from the AI alone.</li>
+            <li>Writes the messages in 6 languages (English, Hinglish, Hindi, Tamil, Kannada, Marathi), with an English back-translation for reviewers.</li>
+          </ul>
+          <p class="small muted" style="margin:10px 0 0">Compliance notes are never sent to any AI.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h2>The safety checks</h2>
+        <p class="sub">Every draft is checked before a human sees it. Up to 11 apply to each message, depending on its type (for example, the closure check runs only on closures).</p>
+        <ul class="chklist" id="chkList"></ul>
+      </div>
+    </div>
+  </section>
 
-  <table>
-    <thead><tr>
-      <th data-sort="rank" class="num">Rank</th><th data-sort="id">Application</th><th data-sort="lang">Language</th>
-      <th data-sort="channel">Channel</th><th data-sort="tpv" class="num">TPV (L/mo)</th><th data-sort="days" class="num">Days quiet</th>
-      <th data-sort="code">Diagnosis</th><th data-sort="route">Route</th><th data-sort="rec">Recoverable</th><th data-sort="status">Agent status</th>
-    </tr></thead>
-    <tbody id="rows"></tbody>
-  </table>
+  <!-- ============================== TAB 4: PRODUCT INSIGHT -->
+  <section class="tab" id="tab-insight" role="tabpanel">
+    <div class="stack">
+      <div class="card fix" id="oneFix"></div>
+      <div class="grid2">
+        <div class="card">
+          <h2>Where merchants stop</h2>
+          <p class="sub">Applications needing action, by the onboarding step they reached. Right column: count · expected TPV at stake (Rs lakh / month).</p>
+          <div id="funnel"></div>
+        </div>
+        <div class="card">
+          <h2>Why they are stuck</h2>
+          <p class="sub">Fixable cases (nudge route), grouped by root cause.</p>
+          <div id="causes"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Language mix of stuck merchants</h2>
+        <p class="sub" id="langSub"></p>
+        <div id="langs"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== TAB 5: ASSUMPTIONS + STRESS TEST -->
+  <section class="tab" id="tab-settings" role="tabpanel">
+    <div class="stack">
+      <div class="card">
+        <h2>Assumptions (what-if)</h2>
+        <p class="sub">Change a number and every rule-based column, queue and total updates instantly. Messages already written are not rewritten; re-run the agent to refresh them.</p>
+        <div class="form" id="assumpForm"></div>
+        <div style="margin-top:12px"><button id="assumpReset">Reset to agreed values</button></div>
+      </div>
+      <div class="card">
+        <h2>Stress test: try your own application</h2>
+        <p class="sub">Live mode only. Use it to test tricky cases (for example a restricted business phrased in new words). Results open in the side panel and are not added to the queues.</p>
+        <div class="form">
+          <label>Reviewer note (leave blank for "merchant just stopped")<textarea id="cNote" rows="2" maxlength="300">We cannot onboard this line of business under our policy</textarea></label>
+          <label>Rejection code (optional)<input id="cCode" placeholder="e.g. R02"></label>
+          <label>Language<select id="cLang"><option>English</option><option>Hinglish</option><option>Hindi</option><option>Tamil</option><option>Kannada</option><option>Marathi</option></select></label>
+          <label>WhatsApp opted in<select id="cWa"><option>Yes</option><option>No</option></select></label>
+          <label>Step reached<select id="cStep"><option>KYC docs</option><option>Bank verification</option><option>Website/App review</option><option>Business details</option></select></label>
+          <label>Business type<select id="cType"><option>Proprietorship</option><option>Partnership</option><option>Private Limited</option><option>LLP</option><option>Trust / NGO</option></select></label>
+          <label>Days inactive<input id="cDays" type="number" value="5"></label>
+          <label>Attempts<input id="cAtt" type="number" value="1"></label>
+          <label>Support contacts<input id="cCont" type="number" value="0"></label>
+          <label>Expected TPV (Rs lakh / month)<input id="cTpv" type="number" value="10" step="0.1"></label>
+        </div>
+        <div style="margin-top:12px"><button class="primary" id="cRun">Run agent on this test case</button> <span id="cMsg" class="muted small"></span></div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <footer>Prototype by Vipin Syam for the Razorpay Campus AI Build-a-thon. All data is synthetic (Data Pack, snapshot 30 Sep 2026). Not a Razorpay product. Messages are drafts: nothing is sent.</footer>
 
 <div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer" aria-label="Application details"></aside>
+<aside class="drawer" id="drawer" aria-label="Application details" role="dialog"></aside>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastText"></span><button id="toastUndo">Undo</button></div>
 
 <script src="lib/rules.js"></script>
 <script>
 "use strict";
 const S = { apps: [], catalog: {}, saved: null, results: {}, approvals: {}, A: Object.assign({}, Rules.DEFAULT_ASSUMPTIONS),
-  passcode: null, live: false, sort: { key: "rank", dir: 1 }, running: false, open: null, custom: {} };
+  passcode: null, live: false, sort: { key: "rank", dir: 1 }, running: false, open: null, custom: {},
+  tab: "overview", queue: "auto", sel: new Set(), showEn: false, msgTab: null, lastBatch: null };
 const $ = (id) => document.getElementById(id);
 const esc = (v) => String(v === null || v === undefined ? "" : v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const fmt = (n, d = 1) => (n === null || n === undefined || isNaN(n)) ? "-" : Number(n).toLocaleString("en-IN", { minimumFractionDigits: d, maximumFractionDigits: d });
 const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const tpvOf = (arr) => arr.reduce((s, x) => s + Number(x.app.expected_monthly_tpv_inr_lakh || 0), 0);
+const NET_REVENUE_RATE = 0.01; // assumption borrowed from the Data Pack's Problem 2 tab
+const APPROVED_SEQ = "Approved: sequence scheduled (not sent)", APPROVED_MSG = "Approved: queued (not sent)";
+const SHOWCASE = [
+  ["A3031", "Top priority, Hinglish"],
+  ["A3051", "Blank code, restricted business: closed, never nudged"],
+  ["A3023", "Rs 59.9L, frustrated: human call"],
+];
 
 async function init() {
   try {
@@ -221,8 +442,12 @@ async function init() {
     $("notice").textContent = "Could not load the data files. If you opened index.html directly from disk, open it through Vercel (or any web server) instead.";
     return;
   }
-  buildFilters(); buildAssumptions(); render();
+  buildControls(); buildAssumptions(); buildStatic();
+  showTab(tabFromHash() || "overview", true);
+  window.addEventListener("hashchange", () => { const t = tabFromHash(); if (t && t !== S.tab) showTab(t, true); });
 }
+const TAB_IDS = ["overview", "queues", "safety", "insight", "settings"];
+function tabFromHash() { const h = (location.hash || "").replace("#", ""); return TAB_IDS.includes(h) ? h : null; }
 
 // ------------------------------------------------------------------ data
 function overrides() {
@@ -242,20 +467,42 @@ function statusOf(x) {
   if (x.res && x.res.status) return x.res.status;
   return x.r.message_type === "pending" ? "Not run: needs AI reading" : "Not run";
 }
+const isSequence = (r) => r.message_type === "nudge" || r.message_type === "final_reminder";
+const approvable = (x) => !!(x.res && x.res.message && x.res.safety && x.res.safety.passed);
+function queueOf(x) {
+  const s = statusOf(x);
+  if (/^(Blocked|Escalated|Sent back)/.test(s)) return "attention";
+  if (x.r.route === "Close politely") return "closures";
+  if (x.r.route === "Route to Compliance") return "compliance";
+  if (x.r.message_type === "call_script") return "calls";
+  return "auto";
+}
 function statusBadge(s) {
-  const cls = s.startsWith("Approved") ? "b-ok" : s.startsWith("Ready") ? "b-blue" : s.startsWith("Blocked") ? "b-bad"
-    : s.startsWith("Escalated") || s.startsWith("Sent back") ? "b-warn" : s.startsWith("Not run: needs") ? "b-violet" : "b-grey";
+  const cls = s.startsWith("Approved") ? "b-ok" : s === "Ready: human call" ? "b-warn" : s.startsWith("Ready") ? "b-ready"
+    : s.startsWith("Blocked") ? "b-bad" : s.startsWith("Escalated") || s.startsWith("Sent back") ? "b-warn"
+    : s.startsWith("Not run: needs") ? "b-violet" : "b-grey";
   return `<span class="badge ${cls}">${esc(s)}</span>`;
 }
 function routeBadge(r) {
-  return r === "Close politely" ? '<span class="badge b-bad">Close politely</span>'
-    : r === "Route to Compliance" ? '<span class="badge b-warn">Compliance</span>' : '<span class="badge b-grey">Nudge to fix</span>';
+  return r === "Close politely" ? '<span class="badge b-close">Close politely</span>'
+    : r === "Route to Compliance" ? '<span class="badge b-comp">Compliance</span>' : '<span class="badge b-grey">Nudge to fix</span>';
 }
 
-// ------------------------------------------------------------------ render
+// ------------------------------------------------------------------ tabs + render
+function showTab(t, first) {
+  S.tab = t;
+  document.querySelectorAll("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === t ? "true" : "false"));
+  document.querySelectorAll("section.tab").forEach((s) => s.classList.toggle("on", s.id === "tab-" + t));
+  if (!first) { try { history.replaceState(null, "", "#" + t); } catch (e) {} }
+  render();
+}
 function render() {
   const all = rows();
-  renderNotice(all); renderKpis(all); renderCauses(all); renderTable(all);
+  renderNotice(all);
+  if (S.tab === "overview") renderOverview(all);
+  if (S.tab === "queues") renderQueues(all);
+  if (S.tab === "safety") renderSafety(all);
+  if (S.tab === "insight") renderInsight(all);
   if (S.open) openDrawer(S.open, true);
 }
 function renderNotice(all) {
@@ -270,64 +517,205 @@ function renderNotice(all) {
     n.innerHTML = `Agent results available for <b>${done} of ${all.length}</b> applications from live runs in this browser. Use <b>Export run</b> to save them for the public demo.`;
   } else {
     n.className = "notice warn";
-    n.innerHTML = "The rule-based decisions below are complete for all applications. The AI steps (reading unclear notes and writing messages) have not been run yet: " +
-      (S.live ? "press <b>Run agent on all</b>." : "unlock live mode, then press <b>Run agent on all</b>.");
+    n.innerHTML = "The rule-based decisions are complete for all applications. The AI steps (reading unclear notes and writing messages) have not been run yet: " +
+      (S.live ? "press <b>Run agent on all</b> in Work queues." : "unlock live mode, then press <b>Run agent on all</b> in Work queues.");
   }
 }
-function renderKpis(all) {
+
+// ------------------------------------------------------------------ tab 1
+function renderOverview(all) {
   const nud = all.filter((x) => x.r.route === "Nudge to fix");
-  const sum = (arr) => arr.reduce((s, x) => s + Number(x.app.expected_monthly_tpv_inr_lakh || 0), 0);
   const rec = nud.filter((x) => x.r.recoverable === "Recoverable");
   const low = nud.filter((x) => x.r.recoverable === "Low probability");
   const hum = nud.filter((x) => x.r.human_call === "Yes");
   const cl = all.filter((x) => x.r.route === "Close politely"), co = all.filter((x) => x.r.route === "Route to Compliance");
-  const ready = all.filter((x) => statusOf(x).startsWith("Ready") || statusOf(x).startsWith("Approved")).length;
-  const blocked = all.filter((x) => statusOf(x).startsWith("Blocked") || statusOf(x).startsWith("Escalated")).length;
+  const ready = all.filter((x) => /^(Ready|Approved)/.test(statusOf(x))).length;
+  const attn = all.filter((x) => /^(Blocked|Escalated)/.test(statusOf(x))).length;
+  $("headline").innerHTML = `${esc(all.length)} merchants are stuck in onboarding. <b>Rs ${fmt(tpvOf(nud), 0)} lakh / month</b> of expected payments is waiting on fixable problems.`;
   const k = [
     [all.length, "Applications needing action", `of ${S.apps.length} in the Data Pack (${S.apps.length - all.length} already live)`],
-    [rec.length, "Recoverable", `Rs ${fmt(sum(rec))}L / month expected TPV`],
-    [low.length, "Low probability", `Rs ${fmt(sum(low))}L: one final reminder, then stop`],
-    [hum.length, "Human calls", `Rs ${fmt(sum(hum))}L: high value and frustrated`],
+    [rec.length, "Recoverable", `Rs ${fmt(tpvOf(rec))}L / month expected TPV`],
+    [low.length, "Low probability", `Rs ${fmt(tpvOf(low))}L: one final reminder, then stop`],
+    [hum.length, "Human calls", `Rs ${fmt(tpvOf(hum))}L: high value and frustrated`],
     [cl.length + co.length, "Not nudged", `${cl.length} closed politely, ${co.length} to Compliance`],
-    [ready, "Messages ready for approval", `${blocked} blocked or escalated to a human`],
+    [ready, "Messages ready for approval", `${attn} blocked or escalated to a human`],
   ];
   $("kpis").innerHTML = k.map(([v, l, s]) => `<div class="kpi"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div><div class="s">${esc(s)}</div></div>`).join("");
+  const worth = tpvOf(rec) * NET_REVENUE_RATE;
+  $("money").innerHTML = `<span class="assume">ASSUMPTION</span><div class="v">Rs ${fmt(worth, 1)} lakh / month</div>
+    <div class="l">At ~1% net revenue on TPV (assumption borrowed from the Data Pack's Problem 2 tab), recoverable merchants are worth about <b>Rs ${fmt(worth, 1)} lakh / month</b> to Razorpay.</div>
+    <div class="s">1% × Rs ${fmt(tpvOf(rec))}L expected monthly TPV of the ${rec.length} recoverable merchants. This is an estimate, not a forecast.</div>`;
 }
-function renderCauses(all) {
-  const nud = all.filter((x) => x.r.route === "Nudge to fix");
-  const g = {};
-  for (const x of nud) { const t = x.r.theme; g[t] = g[t] || { n: 0, tpv: 0 }; g[t].n++; g[t].tpv += Number(x.app.expected_monthly_tpv_inr_lakh || 0); }
-  const list = Object.entries(g).sort((a, b) => b[1].n - a[1].n);
-  const max = Math.max(1, ...list.map(([, v]) => v.n));
-  $("causes").innerHTML = list.map(([t, v]) =>
-    `<div class="bar"><div>${esc(t)}</div><div class="track"><div class="fill" style="width:${(v.n / max) * 100}%;${t.startsWith("Pending") ? "background:var(--ai)" : ""}"></div></div><div class="num">${v.n} · Rs ${fmt(v.tpv)}L</div></div>`).join("");
-  const top = list.filter(([t]) => !t.startsWith("Abandoned") && !t.startsWith("Pending"))[0];
-  const ab = g["Abandoned (no rejection)"];
-  $("insight").innerHTML = `<p style="margin:0 0 6px"><b>Our recommendation to the product team:</b> ` +
-    (top ? `the biggest fixable rejection cause is <b>${esc(top[0].toLowerCase())}</b> (${top[1].n} applications, Rs ${fmt(top[1].tpv)}L / month). ` : "") +
-    `Check that the name on PAN, GST and the bank account match the application <i>while the merchant is typing</i>, before they submit, so the rejection never happens.</p>` +
-    (ab ? `<p style="margin:0" class="muted">${ab.n} more merchants were never rejected; they just stopped (Rs ${fmt(ab.tpv)}L). A reminder naming the exact step, with a resume link, is the fix for them.</p>` : "");
-}
+
+// ------------------------------------------------------------------ tab 2
+const QUEUES = [
+  ["auto", "Automated nudges"], ["calls", "Human calls"], ["closures", "Closures (R10)"],
+  ["compliance", "Compliance (R12)"], ["attention", "Blocked / escalated"],
+];
+const COLS = [
+  ["rank", "Rank", "num"], ["id", "Application", ""], ["lang", "Language", ""], ["channel", "Channel", ""],
+  ["tpv", "TPV (L/mo)", "num"], ["days", "Days quiet", "num"], ["code", "Diagnosis", ""], ["status", "Status", ""],
+];
 function sortVal(x, key) {
   return { rank: x.r.priority_rank || 9999, id: x.r.application_id, lang: x.app.preferred_language, channel: x.r.channel,
-    tpv: -Number(x.app.expected_monthly_tpv_inr_lakh), days: x.app.days_since_last_activity, code: x.r.diagnosed_code,
-    route: x.r.route, rec: x.r.recoverable, status: statusOf(x) }[key];
+    tpv: -Number(x.app.expected_monthly_tpv_inr_lakh), days: Number(x.app.days_since_last_activity), code: x.r.diagnosed_code,
+    status: statusOf(x) }[key];
 }
-function renderTable(all) {
-  const fr = $("fRoute").value, fs = $("fStatus").value, fl = $("fLang").value, q = $("fQ").value.trim().toLowerCase();
-  let list = all.filter((x) => (fr === "all" || x.r.route === fr) && (fl === "all" || x.app.preferred_language === fl) &&
-    (fs === "all" || statusOf(x).startsWith(fs)) &&
+function renderQueues(all) {
+  const groups = {}; for (const [q] of QUEUES) groups[q] = [];
+  for (const x of all) groups[queueOf(x)].push(x);
+  $("qtabs").innerHTML = QUEUES.map(([q, label]) =>
+    `<button data-q="${q}" class="${q === "attention" ? "attn" : ""}" aria-pressed="${S.queue === q}">${esc(label)} <span class="c">${groups[q].length}</span></button>`).join("");
+
+  const fl = $("fLang").value, q = $("fQ").value.trim().toLowerCase();
+  let list = groups[S.queue].filter((x) => (fl === "all" || x.app.preferred_language === fl) &&
     (!q || x.r.application_id.toLowerCase().includes(q) || String(x.r.diagnosed_code).toLowerCase().includes(q)));
   const { key, dir } = S.sort;
   list.sort((a, b) => { const va = sortVal(a, key), vb = sortVal(b, key); return (va > vb ? 1 : va < vb ? -1 : 0) * dir; });
-  $("rows").innerHTML = list.map((x) => `<tr data-id="${esc(x.r.application_id)}">
-    <td class="num">${x.r.priority_rank ? "#" + x.r.priority_rank : "-"}</td>
-    <td><b>${esc(x.r.application_id)}</b><div class="muted small">${esc(x.app.business_type)} · ${esc(x.app.step_reached)}</div></td>
-    <td>${esc(x.app.preferred_language)}</td><td>${esc(x.r.channel)}${x.r.human_call === "Yes" ? '<div><span class="badge b-warn">Human call</span></div>' : ""}</td>
-    <td class="num">${fmt(x.app.expected_monthly_tpv_inr_lakh)}</td><td class="num">${esc(x.app.days_since_last_activity)}</td>
-    <td><b>${esc(x.r.diagnosed_code)}</b><div class="muted small">${esc(x.r.theme)}</div></td>
-    <td>${routeBadge(x.r.route)}</td><td>${esc(x.r.recoverable)}</td><td>${statusBadge(statusOf(x))}</td></tr>`).join("") ||
-    `<tr><td colspan="10" class="muted">No applications match these filters.</td></tr>`;
+
+  const isAuto = S.queue === "auto";
+  const eligible = list.filter((x) => isAuto && approvable(x) && statusOf(x) === "Ready for approval");
+  for (const id of [...S.sel]) if (!eligible.some((x) => x.r.application_id === id)) S.sel.delete(id);
+  const notes = {
+    auto: `<div class="qnote">Pilot policy: a person reviews every message. Closures, Compliance and human calls are always approved one by one.</div>
+      <div class="batchbar"><button class="primary" id="batchBtn" ${S.sel.size ? "" : "disabled"}>Approve selected sequences${S.sel.size ? " (" + S.sel.size + ")" : ""}</button>
+      <span class="small muted">${eligible.length} ready to approve in this view. Sorted by priority rank.</span></div>`,
+    calls: `<div class="qnote">High-value, frustrated merchants. An onboarding executive calls first; the channel message goes only if they cannot be reached. Approved one by one.</div>`,
+    closures: `<div class="qnote">Restricted businesses (R10). One polite closure message, no workaround, no follow-ups. Approved one by one.</div>`,
+    compliance: `<div class="qnote">Compliance cases (R12). The merchant is told only that the application is under review. No reason is ever given. Approved one by one.</div>`,
+    attention: `<div class="qnote">Cases the agent handed to a human: blocked by the safety check, escalated, or sent back by a reviewer.</div>`,
+  };
+  $("qhead").innerHTML = notes[S.queue];
+
+  const arrow = (k) => (S.sort.key === k ? `<span class="arrow">${S.sort.dir === 1 ? "▲" : "▼"}</span>` : "");
+  const allSel = eligible.length > 0 && eligible.every((x) => S.sel.has(x.r.application_id));
+  $("qthead").innerHTML = `<tr>${isAuto ? `<th class="sel"><input type="checkbox" id="selAll" aria-label="Select all ready" ${allSel ? "checked" : ""} ${eligible.length ? "" : "disabled"}></th>` : ""}` +
+    COLS.map(([k, l, c]) => `<th data-sort="${k}" class="${c}">${esc(l)}${arrow(k)}</th>`).join("") + "</tr>";
+  const span = COLS.length + (isAuto ? 1 : 0);
+  if (!list.length) {
+    $("rows").innerHTML = S.queue === "attention" && !groups.attention.length
+      ? `<tr><td class="empty" colspan="${span}"><b>0.</b> Nothing needs fixing.</td></tr>`
+      : `<tr><td class="empty" colspan="${span}">No applications match these filters.</td></tr>`;
+    return;
+  }
+  $("rows").innerHTML = list.map((x) => {
+    const id = x.r.application_id, el = eligible.includes(x);
+    return `<tr class="row" data-id="${esc(id)}">
+    ${isAuto ? `<td class="sel" data-label="Select">${el ? `<input type="checkbox" data-sel="${esc(id)}" aria-label="Select ${esc(id)}" ${S.sel.has(id) ? "checked" : ""}>` : ""}</td>` : ""}
+    <td class="num rankcell" data-label="Rank">${x.r.priority_rank ? "#" + x.r.priority_rank : "-"}</td>
+    <td class="idcell" data-label="Application"><b>${esc(id)}</b><div class="muted small">${esc(x.app.business_type)} · ${esc(x.app.step_reached)}</div></td>
+    <td data-label="Language">${esc(x.app.preferred_language)}</td>
+    <td data-label="Channel">${esc(x.r.channel)}</td>
+    <td class="num" data-label="TPV (L/mo)">${fmt(x.app.expected_monthly_tpv_inr_lakh)}</td>
+    <td class="num" data-label="Days quiet">${esc(x.app.days_since_last_activity)}</td>
+    <td data-label="Diagnosis"><span><b>${esc(x.r.diagnosed_code)}</b> <span class="muted small">${esc(x.r.theme)}</span></span></td>
+    <td data-label="Status">${statusBadge(statusOf(x))}</td></tr>`;
+  }).join("");
+}
+function batchApprove() {
+  const ids = [...S.sel];
+  if (!ids.length) return;
+  const prev = {};
+  for (const id of ids) { prev[id] = S.approvals[id] || null; S.approvals[id] = APPROVED_SEQ; }
+  store.set("p3_approvals", S.approvals);
+  S.lastBatch = prev; S.sel.clear();
+  toast(`${ids.length} sequence${ids.length > 1 ? "s" : ""} approved: Day 0 queued, follow-ups scheduled (nothing is actually sent).`);
+  render();
+}
+let toastTimer = null;
+function toast(text) {
+  $("toastText").textContent = text; $("toast").classList.add("on");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => $("toast").classList.remove("on"), 7000);
+}
+function undoBatch() {
+  if (!S.lastBatch) return;
+  for (const [id, v] of Object.entries(S.lastBatch)) { if (v) S.approvals[id] = v; else delete S.approvals[id]; }
+  store.set("p3_approvals", S.approvals); S.lastBatch = null;
+  $("toast").classList.remove("on"); render();
+}
+
+// ------------------------------------------------------------------ tab 3
+const CHECK_HELP = [
+  ["All required parts written", "Every part the channel and message type need is there: e.g. SMS + email, both reminders, the English back-translation."],
+  ["WhatsApp only if opted in", "WhatsApp text only for merchants who opted in; everyone else gets Email + SMS."],
+  ["Written in the merchant's script", "Hindi and Marathi in Devanagari, Tamil and Kannada in their own scripts, English and Hinglish in Roman letters."],
+  ["No dates or timelines promised", "No \"today\", \"within 24 hours\", dates or deadlines."],
+  ["No promise of approval", "No \"guaranteed\" or \"you will be approved\"."],
+  ["No screening or compliance reasons revealed", "No words like screening, sanctions, watchlist or fraud, in any language."],
+  ["No workaround suggested (closures)", "A restricted business is never told to re-apply, change category or try another provider."],
+  ["Resume link included / not included", "Nudges carry the resume link in every part; closures and Compliance messages never do."],
+  ["Names the step to resume", "Mentions the exact onboarding step where the merchant stopped."],
+  ["Mentions the right fix", "Mentions the fix for the diagnosed problem (for example PAN for a PAN mismatch)."],
+  ["Says it is from Razorpay", "Every message (WhatsApp, SMS, email, both reminders) names Razorpay, so the merchant knows who is writing."],
+  ["Length suitable for the channel", "SMS, WhatsApp, email and reminders stay within their length limits."],
+];
+function draftOneFailure(res) {
+  const t = (res.trace || []).find((s) => s.step === "Safety check (draft 1)");
+  const cut = (res.trace || []).some((s) => s.step === "Write messages" && /cut off/.test(s.result));
+  const parts = t && t.detail ? t.detail.split(" | ") : [];
+  return { cut, parts, text: (cut ? "Reply was cut off (too long). " : "") + parts.join("; ") };
+}
+function plainFailure(part) {
+  const [label, ...rest] = part.split(":"); const detail = rest.join(":").trim();
+  if (/All required parts written/.test(label)) return "Left out " + detail.replace(/^Missing:\s*/, "").replace("back_translation_en", "the English back-translation").replace(/_/g, " ");
+  if (/script/.test(label)) return "Wrong script (" + detail + ")";
+  if (/Razorpay/.test(label)) return "Did not say Razorpay" + (detail ? " (" + detail.replace(/^Missing in:\s*/, "in ") + ")" : "");
+  return label + (detail ? " (" + detail + ")" : "");
+}
+function renderSafety(all) {
+  const res = all.map((x) => x).filter((x) => x.res && x.res.safety);
+  const checksRun = res.reduce((s, x) => s + x.res.safety.checks.length * (x.res.drafts || 1), 0);
+  const rewritten = res.filter((x) => x.res.drafts === 2);
+  const blocked = all.filter((x) => x.res && /^Blocked/.test(x.res.status)).length;
+  const escalated = all.filter((x) => x.res && /^Escalated/.test(x.res.status)).length;
+  const complianceToAI = all.filter((x) => x.r.route === "Route to Compliance" && x.res && x.res.ai_diagnosis).length;
+  $("safetySub").textContent = `Computed from the saved run (${res.length} applications with drafted messages).`;
+  const bigs = [
+    [checksRun, "safety checks run", "across every draft, including rejected first drafts", false],
+    [rewritten.length, "drafts rejected and rewritten", rewritten.map((x) => x.r.application_id).join(", ") || "none", false],
+    [blocked, "messages blocked", "a draft that fails twice is blocked for a human", true],
+    [escalated, "escalated to a human", "AI readings the rules did not accept", true],
+    [complianceToAI, "compliance notes sent to any AI", "by design: the note never leaves the rules", true],
+  ];
+  $("safetyBigs").innerHTML = bigs.map(([v, l, s, z]) => `<div class="big ${z && v === 0 ? "zero" : ""}"><div class="v">${esc(v)}</div><div class="l">${esc(l)}</div><div class="small muted" style="margin-top:4px">${esc(s)}</div></div>`).join("");
+  const caught = rewritten.map((x) => ({ x, f: draftOneFailure(x.res) }));
+  $("caughtTable").innerHTML = `<thead><tr><th>Application</th><th>Language</th><th>What was wrong in draft 1</th><th>Outcome</th></tr></thead><tbody>` +
+    (caught.length ? caught.map(({ x, f }) => `<tr class="row" data-id="${esc(x.r.application_id)}">
+      <td class="idcell" data-label="Application"><b>${esc(x.r.application_id)}</b></td>
+      <td data-label="Language">${esc(x.app.preferred_language)}</td>
+      <td data-label="Draft 1">${esc((f.cut ? ["Reply was cut off (too long)"] : []).concat(f.parts.map(plainFailure)).join("; "))}</td>
+      <td data-label="Outcome">${x.res.safety.passed ? "Rewritten, draft 2 passed · " : "Blocked · "}${statusBadge(statusOf(x))}</td></tr>`).join("")
+      : `<tr><td class="empty" colspan="4"><b>0.</b> Every first draft passed.</td></tr>`) + "</tbody>";
+}
+
+// ------------------------------------------------------------------ tab 4
+function bars(el, list, color) {
+  const max = Math.max(1, ...list.map((g) => g.n));
+  el.innerHTML = list.map((g) => `<div class="bar"><div>${esc(g.label)}</div><div class="track"><div class="fill" style="width:${(g.n / max) * 100}%;${color ? "background:" + color : ""}"></div></div><div class="num">${g.n}${g.tpv !== undefined ? " · Rs " + fmt(g.tpv) + "L" : ""}</div></div>`).join("");
+}
+function group(arr, keyFn) {
+  const g = {}; for (const x of arr) { const k = keyFn(x); g[k] = g[k] || { label: k, n: 0, tpv: 0 }; g[k].n++; g[k].tpv += Number(x.app.expected_monthly_tpv_inr_lakh || 0); }
+  return g;
+}
+function renderInsight(all) {
+  const steps = group(all, (x) => x.app.step_reached);
+  const order = ["Business details", "KYC docs", "Bank verification", "Website/App review"];
+  bars($("funnel"), order.filter((s) => steps[s]).map((s) => steps[s]).concat(Object.values(steps).filter((g) => !order.includes(g.label))));
+  const nud = all.filter((x) => x.r.route === "Nudge to fix");
+  const themes = Object.values(group(nud, (x) => x.r.theme)).sort((a, b) => b.n - a.n);
+  bars($("causes"), themes);
+  const fixable = themes.filter((g) => !/^Abandoned|^Pending/.test(g.label));
+  const top = fixable[0], ab = themes.find((g) => /^Abandoned/.test(g.label));
+  const name = themes.find((g) => g.label === "Name / identity mismatch");
+  const pick = name || top;
+  $("oneFix").innerHTML = `<h2>The one fix I would ship</h2>
+    <p class="big-q">Check that the names on PAN, GST and the bank account match the application while the merchant is typing, before they submit.</p>
+    ${pick ? `<p style="margin:0 0 6px"><b>Why:</b> ${pick.n} applications / Rs ${fmt(pick.tpv)}L per month are blocked by name or identity mismatches${pick === top ? ", the largest fixable rejection cause" : ""}. A live check turns a rejection days later into a correction in seconds.</p>` : ""}
+    ${ab ? `<p class="muted" style="margin:0"><b>Second idea:</b> a resume link plus a reminder naming the exact step, for the ${ab.n} merchants who just stopped (Rs ${fmt(ab.tpv)}L per month). They were never rejected.</p>` : ""}`;
+  const langs = Object.values(group(all, (x) => x.app.preferred_language)).sort((a, b) => b.n - a.n);
+  const nonEn = all.filter((x) => x.app.preferred_language !== "English").length;
+  $("langSub").textContent = `${nonEn} of ${all.length} stuck merchants (${Math.round((nonEn / all.length) * 100)}%) prefer a language other than English. A nudge they can read is the first step to a nudge that works.`;
+  bars($("langs"), langs, "var(--ai)");
 }
 
 // ------------------------------------------------------------------ drawer
@@ -341,7 +729,67 @@ function rulesOnlyTrace(r, app) {
   t.push({ step: "Write messages", actor: "AI", result: "Not run yet" });
   return t;
 }
+// Splits "WhatsApp: ... | Day 3: ... | Day 7: ..." into parts, so each message can show its own English.
+function englishParts(bt) {
+  const out = {};
+  if (!bt) return out;
+  for (const part of String(bt).split(/\s\|\s/)) {
+    const m = part.match(/^\s*([A-Za-z0-9 ()\/+-]{2,40}):\s*([\s\S]*)$/);
+    if (!m) continue;
+    const k = m[1].toLowerCase();
+    const key = /day\s*3/.test(k) ? "d3" : /day\s*7|final/.test(k) ? "d7" : /subject/.test(k) ? "email_subject"
+      : /email|body/.test(k) ? "email_body" : /sms/.test(k) ? "sms" : /whatsapp/.test(k) ? "whatsapp" : /reminder/.test(k) ? "d3" : null;
+    if (key) out[key] = (out[key] ? out[key] + " " : "") + m[2].trim();
+  }
+  return out;
+}
+function messageTabs(r, msg) {
+  const wa = r.channel === "WhatsApp", tabs = [];
+  const main = wa ? [{ kind: "wa", key: "whatsapp", text: msg.whatsapp }]
+    : [{ kind: "sms", key: "sms", text: msg.sms }, { kind: "email", key: "email_body", subject: msg.email_subject, text: msg.email_body }];
+  if (msg.call_script) {
+    tabs.push({ id: "call", label: "Call script (Day 0)", call: msg.call_script });
+    tabs.push({ id: "d0", label: "Day 2: if not reached", items: main.filter((i) => i.text) });
+  } else {
+    tabs.push({ id: "d0", label: "Day 0", items: main.filter((i) => i.text) });
+  }
+  if (msg.reminder_day3) tabs.push({ id: "d3", label: "Day 3", items: [{ kind: wa ? "wa" : "sms", key: "d3", text: msg.reminder_day3 }] });
+  if (msg.final_day7) tabs.push({ id: "d7", label: "Day 7", items: [{ kind: wa ? "wa" : "sms", key: "d7", text: msg.final_day7 }] });
+  return tabs;
+}
+function previewHtml(r, app, msg) {
+  const tabs = messageTabs(r, msg);
+  if (!tabs.length) return "";
+  if (!tabs.some((t) => t.id === S.msgTab)) S.msgTab = tabs[0].id;
+  const cur = tabs.find((t) => t.id === S.msgTab);
+  const isEn = app.preferred_language === "English";
+  const en = englishParts(msg.back_translation_en);
+  const parsed = Object.keys(en).length > 0;
+  const enBox = (key) => {
+    if (!S.showEn || isEn) return "";
+    if (parsed && en[key]) return `<div class="en"><span class="lab">English</span>${esc(en[key])}</div>`;
+    return "";
+  };
+  let body = "";
+  if (cur.call) {
+    body = `<div class="script"><div class="small muted" style="margin-bottom:6px;font-weight:600">Talking points for the onboarding executive (in English)</div>${esc(cur.call)}</div>`;
+  } else {
+    const chat = cur.items.filter((i) => i.kind !== "email");
+    const email = cur.items.find((i) => i.kind === "email");
+    const wa = r.channel === "WhatsApp";
+    body = `<div class="phone ${wa ? "" : "sms"}"><div class="who">${wa ? "WhatsApp · Razorpay Onboarding Team" : "SMS · Razorpay"}</div>` +
+      chat.map((i) => `<div class="bubble ${wa ? "wa" : ""}">${esc(i.text)}</div>${enBox(i.key)}`).join("") + `</div>` +
+      (email ? `<div class="emailcard"><div class="eh">Email · Razorpay Onboarding Team<br><b>${esc(email.subject || "")}</b></div><div class="eb">${esc(email.text)}</div>${S.showEn && !isEn && parsed && (en.email_subject || en.email_body) ? `<div class="en" style="margin:0 12px 12px"><span class="lab">English</span>${en.email_subject ? "<b>" + esc(en.email_subject) + "</b>\n" : ""}${esc(en.email_body || "")}</div>` : ""}</div>` : "");
+  }
+  const anyMissing = S.showEn && !isEn && !cur.call && (!parsed || cur.items.some((i) => !en[i.key] && !(i.kind === "email" && (en.email_body || en.email_subject))));
+  const fullBt = anyMissing && msg.back_translation_en ? `<div class="en" style="margin-top:10px"><span class="lab">English back-translation (full)</span>${esc(msg.back_translation_en)}</div>` : "";
+  const toggle = isEn ? `<span class="small muted">Merchant's language is English</span>`
+    : `<label class="switch"><input type="checkbox" id="showEn" ${S.showEn ? "checked" : ""}> Show English</label>`;
+  return `<div class="mtabs">${tabs.map((t) => `<button data-mtab="${t.id}" aria-pressed="${t.id === S.msgTab}">${esc(t.label)}</button>`).join("")}<span class="spacer"></span>${toggle}</div>
+    <div class="preview">${body}</div>${fullBt}`;
+}
 function openDrawer(id, keep) {
+  if (S.open !== id) { S.msgTab = null; }
   S.open = id;
   const isCustom = id.startsWith("TEST-");
   let x;
@@ -352,48 +800,63 @@ function openDrawer(id, keep) {
   const msg = (res && res.message) || null;
   const trace = res && res.trace ? res.trace : rulesOnlyTrace(r, app);
   const st = isCustom ? (res.status || "") : statusOf(x);
-  const parts = [];
-  if (msg) {
-    const box = (k, lab, cls) => msg[k] ? `<div class="msg ${cls || ""}"><div class="lab">${lab}</div>${esc(msg[k])}</div>` : "";
-    parts.push(box("whatsapp", "WhatsApp (day 0)", "wa"), box("sms", "SMS (day 0)"), msg.email_subject ? `<div class="msg"><div class="lab">Email (day 0)</div><b>${esc(msg.email_subject)}</b>\n\n${esc(msg.email_body || "")}</div>` : "",
-      box("reminder_day3", "Day 3 reminder"), box("final_day7", "Day 7 final reminder"), box("call_script", "Call script for the onboarding executive"),
-      box("back_translation_en", "English back-translation (for reviewers)", "bt"));
-  }
   const checks = res && res.safety ? res.safety.checks : null;
   const plan = r.follow_up_plan || Rules.followUpPlan(r.message_type);
+  const mainMsg = msg ? (msg.whatsapp || msg.sms || msg.email_body || "") : "";
+  const firstLines = mainMsg.split("\n").filter((l) => l.trim()).slice(0, 3).join("\n");
+  const after = msg && mainMsg ? esc(firstLines.length > 260 ? firstLines.slice(0, 257) + "…" : firstLines)
+    : `<span class="muted">${res ? "No message drafted: a human decides this case." : "Not run yet: run the agent in live mode."}</span>`;
+
+  let rewriteNote = "";
+  if (res && res.drafts === 2) {
+    const f = draftOneFailure(res);
+    const what = (f.cut ? ["the reply was cut off (too long)"] : []).concat(f.parts.map(plainFailure)).join("; ");
+    rewriteNote = res.safety && res.safety.passed
+      ? `<div class="rewrite"><b>Draft 1 was rejected by the safety check:</b> ${esc(what)}. The AI rewrote it and draft 2 passed.</div>`
+      : `<div class="rewrite bad"><b>Draft 1 was rejected by the safety check:</b> ${esc(what)}. The rewrite failed too, so the case is blocked for a human.</div>`;
+  }
+  const seq = isSequence(r);
+  const canApprove = msg && res && res.safety && res.safety.passed;
   $("drawer").innerHTML = `
   <div class="dh"><div><h3>${esc(app.application_id)} <span class="muted" style="font-weight:500;font-size:13px">· ${esc(app.business_type)} · ${esc(app.city || "")}</span></h3>
-    <div style="margin-top:4px">${routeBadge(r.route)} ${statusBadge(st)}</div></div>
-    <button id="closeDrawer">Close</button></div>
+    <div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap">${routeBadge(r.route)} ${statusBadge(st)}</div></div>
+    <button id="closeDrawer" aria-label="Close">Close</button></div>
   <div class="db">
+    <div class="sec"><div class="ba">
+      <div class="box before"><div class="lab">What the reviewer wrote</div>${app.rejection_code ? "<b>" + esc(app.rejection_code) + "</b>" + (app.rejection_message ? " · " : "") : (app.rejection_message ? "<b>No code</b> · " : "")}${app.rejection_message ? esc(app.rejection_message) : (app.rejection_code ? "" : "No note: the merchant just stopped.")}</div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="box after" style="white-space:pre-wrap"><div class="lab">What the merchant receives</div>${after}</div>
+    </div></div>
+    ${rewriteNote}
+    <div class="sec"><h4>Messages (${esc(r.channel || "")}${app.preferred_language ? ", " + esc(app.preferred_language) : ""})</h4>${msg ? previewHtml(r, app, msg) : '<div class="muted">No message yet. ' + (r.message_type === "pending" || !res ? "Run the agent (live mode) to draft one." : "This case was handed to a human before any drafting.") + "</div>"}</div>
+    <div class="sec"><h4>Human decision</h4><div class="actions">
+      ${isCustom ? '<span class="small muted">Stress-test cases cannot be approved.</span>' : `<button class="primary" id="approveBtn" ${canApprove ? "" : "disabled"}>${seq ? "Approve sequence" : "Approve message"}</button>
+      <button id="rejectBtn" ${res ? "" : "disabled"}>Send back to a human</button>
+      ${S.approvals[id] ? '<button id="undoBtn">Undo</button>' : ""}
+      ${S.live ? `<button id="runOneBtn">${res ? "Re-run agent" : "Run agent"}</button>` : ""}`}
+    </div><div class="muted small" style="margin-top:8px">Approving sends Day 0 now and schedules the listed follow-ups. Follow-ups go out only if the stop rules have not triggered. In this prototype nothing is actually sent; the decision is only recorded.</div></div>
     <div class="sec"><h4>Facts from the Data Pack</h4><div class="facts">
       <div><b>Language</b>${esc(app.preferred_language)}</div><div><b>WhatsApp opted in</b>${esc(app.whatsapp_opted_in)}</div><div><b>Stuck at</b>${esc(app.step_reached)}</div>
       <div><b>Days quiet</b>${esc(app.days_since_last_activity)}</div><div><b>Attempts / support contacts</b>${esc(app.attempts)} / ${esc(app.support_contacts)}</div><div><b>Expected TPV</b>Rs ${fmt(app.expected_monthly_tpv_inr_lakh)}L / month</div>
     </div></div>
-    <div class="sec"><h4>Reviewer's note</h4><div class="note">${app.rejection_code ? "<b>" + esc(app.rejection_code) + "</b> · " : "<b>No code</b> · "}${esc(app.rejection_message || "No message: the merchant just stopped.")}</div></div>
-    <div class="sec"><h4>Decision</h4><div class="facts">
+    <div class="sec"><h4>Decision (rules)</h4><div class="facts">
       <div><b>Diagnosis</b>${esc(r.diagnosed_code)}: ${esc(r.plain_meaning)}</div><div><b>Fixable / recoverable</b>${esc(r.fixable)} / ${esc(r.recoverable)}</div><div><b>Priority</b>${r.priority_rank ? "#" + r.priority_rank + " (score " + esc(r.priority_score) + ")" : "-"}</div>
-      <div style="grid-column:span 3"><b>Standard fix (catalog)</b>${esc(r.standard_fix)}</div>
+      <div class="wide"><b>Standard fix (catalog)</b>${esc(r.standard_fix)}</div>
     </div></div>
     <div class="sec"><h4>Agent trace</h4><div class="trace">${trace.map((t) => `<div class="step ${esc(t.actor)}"><div class="h"><span class="tag t-${esc(t.actor)}">${esc(t.actor)}</span> ${esc(t.step)}: ${esc(t.result)}</div>${t.detail ? `<div class="d">${esc(t.detail)}</div>` : ""}</div>`).join("")}</div></div>
-    <div class="sec"><h4>Drafted messages ${res && res.drafts === 2 ? '<span class="badge b-warn">rewritten once after a failed check</span>' : ""}</h4>${parts.join("") || '<div class="muted">No message yet. ' + (r.message_type === "pending" || !res ? "Run the agent (live mode) to draft one." : "This case was handed to a human before any drafting.") + "</div>"}</div>
     ${checks ? `<div class="sec"><h4>Safety checks (${checks.filter((c) => c.pass).length} of ${checks.length} passed)</h4><div class="checks">${checks.map((c) => `<div class="chk ${c.pass ? "p" : "f"}">${c.pass ? "✓" : "✗"} ${esc(c.label)}${c.detail && !c.pass ? `<div class="muted small">${esc(c.detail)}</div>` : ""}</div>`).join("")}</div></div>` : ""}
     <div class="sec"><h4>Follow-up plan (rules)</h4><ol style="margin:0 0 6px 18px;padding:0">${plan.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol><div class="muted small">${esc(plan.stop_rules)}</div></div>
-    <div class="sec"><h4>Human decision</h4><div class="actions">
-      ${isCustom ? "" : `<button class="primary" id="approveBtn" ${msg && res.safety && res.safety.passed ? "" : "disabled"}>Approve: queue to send</button>
-      <button id="rejectBtn" ${res ? "" : "disabled"}>Send back to a human</button>
-      ${S.approvals[id] ? '<button id="undoBtn">Undo decision</button>' : ""}
-      <button id="runOneBtn" ${S.live ? "" : "disabled"} title="${S.live ? "" : "Unlock live mode first"}">${res ? "Re-run agent" : "Run agent"}</button>`}
-    </div><div class="muted small" style="margin-top:6px">In this prototype "queue to send" only records the decision. No message is actually sent.</div></div>
   </div>`;
   $("drawer").classList.add("open"); $("scrim").classList.add("open");
   $("closeDrawer").onclick = closeDrawer;
+  $("drawer").querySelectorAll("[data-mtab]").forEach((b) => (b.onclick = () => { S.msgTab = b.dataset.mtab; openDrawer(id, true); }));
+  const se = $("showEn"); if (se) se.onchange = () => { S.showEn = se.checked; openDrawer(id, true); };
   if (!isCustom) {
     const ap = $("approveBtn"), rj = $("rejectBtn"), un = $("undoBtn"), ro = $("runOneBtn");
-    if (ap) ap.onclick = () => decide(id, "Approved: queued (not sent)");
+    if (ap) ap.onclick = () => decide(id, seq ? APPROVED_SEQ : APPROVED_MSG);
     if (rj) rj.onclick = () => decide(id, "Sent back to a human");
     if (un) un.onclick = () => decide(id, null);
-    if (ro) ro.onclick = () => runOne(id).then(render);
+    if (ro) ro.onclick = () => { ro.disabled = true; ro.textContent = "Running…"; runOne(id).then(render); };
   }
   if (!keep) $("drawer").scrollTop = 0;
 }
@@ -429,6 +892,7 @@ function setMode() {
   $("modePill").textContent = S.live ? "Live mode: AI on" : "Demo mode: saved results";
   $("unlockBtn").textContent = S.live ? "Lock" : "Unlock live mode";
   $("runAll").disabled = !S.live || S.running;
+  $("runAll").title = S.live ? "" : "Unlock live mode first";
   $("cRun").disabled = !S.live;
 }
 async function runOne(id) {
@@ -464,7 +928,7 @@ async function runCustom() {
   catch (e) { $("cMsg").textContent = "Error: " + e.message; }
 }
 
-// ------------------------------------------------------------------ exports
+// ------------------------------------------------------------------ exports (same columns and format as before)
 function download(name, text, type) {
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
@@ -496,22 +960,43 @@ function exportJson() {
 }
 
 // ------------------------------------------------------------------ controls
-function buildFilters() {
+function buildControls() {
+  document.querySelectorAll("nav.tabs button").forEach((b) => (b.onclick = () => showTab(b.dataset.tab)));
   const langs = [...new Set(S.apps.map((a) => a.preferred_language))].sort();
   $("fLang").innerHTML += langs.map((l) => `<option>${esc(l)}</option>`).join("");
-  $("fStatus").innerHTML += ["Not run", "Ready", "Approved", "Blocked", "Escalated", "Sent back"].map((s) => `<option value="${s}">${s}</option>`).join("");
-  ["fRoute", "fStatus", "fLang"].forEach((id) => ($(id).onchange = () => renderTable(rows())));
-  $("fQ").oninput = () => renderTable(rows());
-  document.querySelectorAll("th[data-sort]").forEach((th) => (th.onclick = () => {
-    const k = th.dataset.sort; S.sort = { key: k, dir: S.sort.key === k ? -S.sort.dir : 1 }; renderTable(rows()); }));
-  $("rows").onclick = (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) openDrawer(tr.dataset.id); };
+  $("fLang").onchange = () => renderQueues(rows());
+  $("fQ").oninput = () => renderQueues(rows());
+  $("qtabs").onclick = (e) => { const b = e.target.closest("button[data-q]"); if (!b) return; S.queue = b.dataset.q; S.sel.clear();
+    S.sort = { key: S.queue === "auto" ? "rank" : "tpv", dir: 1 }; renderQueues(rows()); };
+  $("qthead").onclick = (e) => {
+    if (e.target.id === "selAll") return;
+    const th = e.target.closest("th[data-sort]"); if (!th) return;
+    const k = th.dataset.sort; S.sort = { key: k, dir: S.sort.key === k ? -S.sort.dir : 1 }; renderQueues(rows()); };
+  $("qthead").onchange = (e) => {
+    if (e.target.id !== "selAll") return;
+    const boxes = [...$("rows").querySelectorAll("input[data-sel]")];
+    for (const b of boxes) { if (e.target.checked) S.sel.add(b.dataset.sel); else S.sel.delete(b.dataset.sel); }
+    renderQueues(rows()); };
+  $("rows").onclick = (e) => {
+    if (e.target.closest("td.sel")) return;
+    const tr = e.target.closest("tr[data-id]"); if (tr) openDrawer(tr.dataset.id); };
+  $("rows").onchange = (e) => {
+    const id = e.target.dataset && e.target.dataset.sel; if (!id) return;
+    if (e.target.checked) S.sel.add(id); else S.sel.delete(id);
+    renderQueues(rows()); };
+  $("qhead").onclick = (e) => { if (e.target.id === "batchBtn") batchApprove(); };
+  $("caughtTable").onclick = (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) openDrawer(tr.dataset.id); };
+  $("demoBtns").innerHTML = SHOWCASE.map(([id, t]) => `<button data-open="${id}"><b>${id}</b><span>${esc(t)}</span></button>`).join("");
+  $("demoBtns").onclick = (e) => { const b = e.target.closest("button[data-open]"); if (b) openDrawer(b.dataset.open); };
   $("scrim").onclick = closeDrawer;
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
   $("unlockBtn").onclick = unlock; $("runAll").onclick = runAll; $("cRun").onclick = runCustom;
   $("exportCsv").onclick = exportCsv; $("exportJson").onclick = exportJson;
-  $("toggleAssump").onclick = () => $("assumpPanel").classList.toggle("open");
-  $("toggleStress").onclick = () => $("stressPanel").classList.toggle("open");
+  $("toastUndo").onclick = undoBatch;
   setMode();
+}
+function buildStatic() {
+  $("chkList").innerHTML = CHECK_HELP.map(([l, h]) => `<li><b>${esc(l)}</b>${esc(h)}</li>`).join("");
 }
 function buildAssumptions() {
   const f = [["maxDays", "Recoverable if inactive ≤ (days)"], ["maxAttempts", "Recoverable if attempts < (and human-call trigger)"],

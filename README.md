@@ -30,7 +30,7 @@ data/applications.json The 100 applications from the Data Pack
 data/catalog.json      The 13 rejection codes from the Data Pack (+ our theme grouping)
 saved_run.json         A saved run of the agent, shown to anyone who opens the site (empty until you run it)
 tests/                 Automated tests using a fake AI (run: npm test)
-docs/                  Step 1 Excel rules engine + its build/verify scripts
+docs/                  Step 1 Excel rules engine + its build/verify scripts; UI_SPEC.md (how the page was specified)
 vercel.json            Gives the agent function up to 120 seconds per application (it stops itself at 110)
 scripts/run_all.js     Runs the live agent on all applications and writes saved_run.json (node scripts/run_all.js)
 ```
